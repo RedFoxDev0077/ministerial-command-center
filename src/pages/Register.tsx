@@ -37,7 +37,6 @@ const registerSchema = z.object({
   email: z.string().email('Email inválido'),
   password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
   confirmPassword: z.string(),
-  role: z.enum(['ADMIN', 'GABINETE', 'REVISOR', 'LECTOR']),
   departmentId: z.string().min(1, 'Debe seleccionar un departamento'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Las contraseñas no coinciden',
@@ -114,7 +113,6 @@ export default function Register() {
           password: data.password,
           firstName: data.firstName,
           lastName: data.lastName,
-          role: data.role,
           departmentId: data.departmentId,
         }),
       });
@@ -333,28 +331,13 @@ export default function Register() {
               )}
             </div>
 
-            {/* Role */}
-            <div className="space-y-2">
-              <Label htmlFor="role" className="text-sm font-medium">
-                Rol
-              </Label>
-              <div className="relative group">
-                <Shield className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors z-10" />
-                <Select onValueChange={(value) => setValue('role', value as any)}>
-                  <SelectTrigger className={`pl-10 ${errors.role ? 'border-destructive' : ''}`}>
-                    <SelectValue placeholder="Seleccionar rol" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="LECTOR">Lector</SelectItem>
-                    <SelectItem value="REVISOR">Revisor</SelectItem>
-                    <SelectItem value="GABINETE">Gabinete</SelectItem>
-                    <SelectItem value="ADMIN">Administrador</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              {errors.role && (
-                <p className="text-xs text-destructive animate-slide-down">{errors.role.message}</p>
-              )}
+            {/* Role notice - roles are assigned by an administrator, never self-selected */}
+            <div className="flex items-start gap-3 rounded-lg border border-border bg-muted/40 p-3">
+              <Shield className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Su cuenta se creará con permisos de <span className="font-medium text-foreground">Lector</span> (solo
+                lectura). Un administrador debe asignarle un rol superior desde el módulo de Usuarios.
+              </p>
             </div>
 
             {/* Department */}

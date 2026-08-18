@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -26,6 +27,7 @@ import { AgendaModule } from './agenda/agenda.module';
 import { MultimediaModule } from './multimedia/multimedia.module';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
 import { AppController } from './app.controller';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -83,7 +85,15 @@ import { AppController } from './app.controller';
     WhatsappModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    // Authenticate by default. Controllers keep their own @UseGuards for role
+    // checks, but this makes a newly added controller protected unless it
+    // explicitly opts out with @Public() — rather than open by default.
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
   exports: [],
 })
 export class AppModule {}

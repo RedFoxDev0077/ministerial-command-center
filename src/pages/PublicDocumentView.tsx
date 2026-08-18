@@ -15,14 +15,10 @@ import {
   FileCheck,
   AlertCircle,
   Lock,
-  History,
-  RefreshCw,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
-import { FileConversionDialog } from '@/components/documents/FileConversionDialog';
-import { FileVersionHistory } from '@/components/documents/FileVersionHistory';
 
 interface Document {
   id: string;
@@ -70,15 +66,6 @@ export default function PublicDocumentView() {
   const [documentData, setDocumentData] = useState<Document | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Dialog states for file operations
-  const [conversionDialogOpen, setConversionDialogOpen] = useState(false);
-  const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<{
-    id: string;
-    fileName: string;
-    mimeType: string;
-  } | null>(null);
 
   useEffect(() => {
     const fetchDocument = async () => {
@@ -132,16 +119,6 @@ export default function PublicDocumentView() {
       console.error('Error viewing file:', error);
       toast.error('Error al abrir archivo');
     }
-  }, []);
-
-  const handleOpenConversion = useCallback((file: { id: string; fileName: string; mimeType: string }) => {
-    setSelectedFile(file);
-    setConversionDialogOpen(true);
-  }, []);
-
-  const handleOpenHistory = useCallback((file: { id: string; fileName: string; mimeType: string }) => {
-    setSelectedFile(file);
-    setVersionHistoryOpen(true);
   }, []);
 
   const formatFileSize = (bytes: number): string => {
@@ -380,6 +357,10 @@ export default function PublicDocumentView() {
                                 {formatFileSize(file.size)} • {file.mimeType}
                               </p>
                             </div>
+                            {/* Conversion and version history require an
+                                authenticated session (they expose uploader
+                                identity and prior revisions), so they are not
+                                offered on the anonymous QR view. */}
                             <div className="flex gap-2">
                               <Button
                                 variant="outline"
@@ -388,30 +369,6 @@ export default function PublicDocumentView() {
                               >
                                 <Eye className="h-4 w-4 mr-1" />
                                 Ver
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleOpenConversion({
-                                  id: file.id,
-                                  fileName: file.fileName,
-                                  mimeType: file.mimeType,
-                                })}
-                              >
-                                <RefreshCw className="h-4 w-4 mr-1" />
-                                Convertir
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleOpenHistory({
-                                  id: file.id,
-                                  fileName: file.fileName,
-                                  mimeType: file.mimeType,
-                                })}
-                              >
-                                <History className="h-4 w-4 mr-1" />
-                                Historial
                               </Button>
                             </div>
                           </div>
@@ -444,31 +401,6 @@ export default function PublicDocumentView() {
             .
           </p>
         </div>
-
-        {/* File Conversion Dialog */}
-        {selectedFile && (
-          <FileConversionDialog
-            open={conversionDialogOpen}
-            onOpenChange={setConversionDialogOpen}
-            fileId={selectedFile.id}
-            fileName={selectedFile.fileName}
-            mimeType={selectedFile.mimeType}
-          />
-        )}
-
-        {/* File Version History Dialog */}
-        {selectedFile && (
-          <FileVersionHistory
-            open={versionHistoryOpen}
-            onOpenChange={setVersionHistoryOpen}
-            fileId={selectedFile.id}
-            fileName={selectedFile.fileName}
-            onVersionRestored={() => {
-              // Reload document to show updated file
-              window.location.reload();
-            }}
-          />
-        )}
       </div>
     </div>
   );

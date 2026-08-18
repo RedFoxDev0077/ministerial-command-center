@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException, ConflictException, BadRequestExcepti
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -47,7 +48,9 @@ export class AuthService {
         password: hashedPassword,
         firstName: registerDto.firstName,
         lastName: registerDto.lastName,
-        role: registerDto.role,
+        // Self-registration is always least-privilege. Raising a user's role is
+        // an ADMIN-only operation through the users module.
+        role: Role.LECTOR,
         departmentId: registerDto.departmentId,
         position: registerDto.position,
         phone: registerDto.phone,

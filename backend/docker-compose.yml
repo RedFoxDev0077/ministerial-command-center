@@ -6,9 +6,9 @@ services:
     container_name: ministerial-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ministerial_user
-      POSTGRES_PASSWORD: ministerial_pass_2024
-      POSTGRES_DB: ministerial_command_center
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-ministerial_command_center}
     ports:
       - "5432:5432"
     volumes:
@@ -23,9 +23,12 @@ services:
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: "postgresql://ministerial_user:ministerial_pass_2024@postgres:5432/ministerial_command_center?schema=public"
-      JWT_SECRET: "your-super-secret-jwt-key-change-in-production-64-chars-long-minimum"
-      JWT_REFRESH_SECRET: "your-super-secret-refresh-key-change-in-production-64-chars-long"
+      # All secrets come from a gitignored .env next to this file. Compose fails
+      # fast if one is missing, so a deployment can never silently come up with
+      # a placeholder signing key.
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ministerial_command_center}?schema=public"
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env (openssl rand -hex 64)}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?set JWT_REFRESH_SECRET in .env (openssl rand -hex 64)}
       JWT_EXPIRATION: "15m"
       JWT_REFRESH_EXPIRATION: "7d"
       NODE_ENV: "development"

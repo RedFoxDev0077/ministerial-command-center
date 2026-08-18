@@ -19,13 +19,22 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Configuration
-VPS_IP="72.61.41.94"
-VPS_USER="root"
-VPS_PASSWORD="NDSw222arle#"
+# Credentials come from the environment, never from this file. Export them in
+# your shell (or a gitignored .env you `source`) before running:
+#   export VPS_IP=... VPS_USER=... VPS_PASSWORD=...
+# Prefer SSH keys over VPS_PASSWORD: `ssh-copy-id $VPS_USER@$VPS_IP`, then leave
+# VPS_PASSWORD unset and this script will use key auth.
+VPS_IP="${VPS_IP:-}"
+VPS_USER="${VPS_USER:-root}"
+VPS_PASSWORD="${VPS_PASSWORD:-}"
 REMOTE_MODE=false
 
 if [ "$1" = "--remote" ]; then
     REMOTE_MODE=true
+    if [ -z "$VPS_IP" ]; then
+        echo "VPS_IP is not set. Export it before running with --remote." >&2
+        exit 1
+    fi
 fi
 
 echo -e "${BLUE}╔════════════════════════════════════════╗${NC}"
@@ -43,10 +52,10 @@ fi
 run_cmd() {
     local cmd="$1"
     if [ "$REMOTE_MODE" = true ]; then
-        if command -v sshpass &> /dev/null; then
-            sshpass -p "${VPS_PASSWORD}" ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_IP} "${cmd}"
+        if [ -n "${VPS_PASSWORD}" ] && command -v sshpass &> /dev/null; then
+            sshpass -p "${VPS_PASSWORD}" ssh -o StrictHostKeyChecking=accept-new ${VPS_USER}@${VPS_IP} "${cmd}"
         else
-            echo "${VPS_PASSWORD}" | ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_IP} "${cmd}"
+            ssh -o StrictHostKeyChecking=accept-new ${VPS_USER}@${VPS_IP} "${cmd}"
         fi
     else
         eval "$cmd"

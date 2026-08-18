@@ -112,6 +112,12 @@ npx prisma generate
 # Run database migrations
 npx prisma db push
 
+# Create the full-text search column and index.
+# Required: `search_vector` is a tsvector, which Prisma cannot represent, so it
+# is NOT created by `db push`. Without it document search silently degrades to a
+# slower substring match.
+psql "$DATABASE_URL" -f prisma/sql/001_document_search_vector.sql
+
 # Seed initial data (optional)
 npx prisma db seed
 
@@ -145,14 +151,24 @@ Frontend runs at: `http://localhost:5173`
 
 After seeding the database:
 
-| Email | Password | Role | Access |
-|-------|----------|------|--------|
-| admin@ministerio.gq | Admin123! | ADMIN | Full system access |
-| ministro@ministerio.gq | Ministro123! | GABINETE | Minister (signature authority) |
-| revisor@ministerio.gq | Revisor123! | REVISOR | Document reviewer |
-| lector@ministerio.gq | Lector123! | LECTOR | Read-only |
+Accounts created by `prisma/seed.ts`:
 
-**⚠️ Important**: Change these passwords in production!
+| Email | Role | Access |
+|-------|------|--------|
+| admin@mttsia.gob.gq | ADMIN | Full system access **and sole signature authority** |
+| gabinete@mttsia.gob.gq | GABINETE | Cabinet staff — can create and route documents, cannot sign |
+| revisor@mttsia.gob.gq | REVISOR | Document reviewer |
+| lector@mttsia.gob.gq | LECTOR | Read-only |
+
+Passwords are set in `prisma/seed.ts` — read them there rather than from this
+file, which is committed to git.
+
+**⚠️ Important**:
+- Change every seeded password before the system is reachable from a network.
+- Signing is restricted to `Role.ADMIN` (see `MinisterValidationService`), so the
+  Minister's own account must be `ADMIN`. A `GABINETE` account cannot sign.
+- Public self-registration always creates a **LECTOR** account. Roles are
+  assigned by an administrator via the Users module (`POST /api/users`).
 
 ---
 
@@ -177,11 +193,11 @@ npm run build
 # Create archive
 tar -czf dist.tar.gz -C dist .
 
-# Upload to VPS
-echo "NDSw222arle#" | scp -o StrictHostKeyChecking=no dist.tar.gz root@72.61.41.94:/tmp/
+# Upload to VPS (uses SSH key auth; never put a password in this file)
+scp dist.tar.gz "$VPS_USER@$VPS_IP:/tmp/"
 
 # SSH and extract
-ssh root@72.61.41.94 "cd /var/www/ministerial-command-center && tar -xzf /tmp/dist.tar.gz && rm /tmp/dist.tar.gz"
+ssh "$VPS_USER@$VPS_IP" "cd /var/www/ministerial-command-center && tar -xzf /tmp/dist.tar.gz && rm /tmp/dist.tar.gz"
 ```
 
 #### Backend Deployment

@@ -449,6 +449,67 @@ export class DocumentsService {
   }
 
   /**
+   * Get a document for the unauthenticated QR-code view.
+   *
+   * This is an explicit allow-list, NOT `findOne`. Anyone holding (or guessing)
+   * a document id can call this, so it must never expose internal working data:
+   * the Minister's decree note and annotations, AI summaries/draft responses,
+   * internal comments, deadlines, signature flows, expediente linkage, or staff
+   * email addresses all stay server-side.
+   */
+  async findOnePublic(id: string) {
+    const document = await this.prisma.document.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        correlativeNumber: true,
+        title: true,
+        type: true,
+        status: true,
+        direction: true,
+        classification: true,
+        content: true,
+        createdAt: true,
+        receivedAt: true,
+        sentAt: true,
+        entity: {
+          select: { id: true, name: true, shortName: true },
+        },
+        responsible: {
+          select: { firstName: true, lastName: true },
+        },
+        files: {
+          select: {
+            id: true,
+            fileName: true,
+            fileSize: true,
+            mimeType: true,
+          },
+        },
+        tags: {
+          select: {
+            tagId: true,
+            tag: { select: { id: true, name: true, color: true } },
+          },
+        },
+      },
+    });
+
+    if (!document) {
+      throw new NotFoundException(`Document with ID ${id} not found`);
+    }
+
+    return {
+      ...document,
+      // The public view reads `size`; the column is `fileSize`.
+      files: document.files.map(({ fileSize, ...file }) => ({
+        ...file,
+        size: fileSize,
+      })),
+    };
+  }
+
+  /**
    * Update document
    */
   async update(id: string, updateDocumentDto: UpdateDocumentDto) {
@@ -1052,12 +1113,45 @@ export class DocumentsService {
 
     const skip = calculateSkip(page, limit);
 
-    // Convert query to tsquery format (handle Spanish characters and multiple words)
+    // Convert query to tsquery format (handle Spanish characters and multiple words).
+    // tsquery operators (& | ! : * ( ) ' \) are stripped from each term: they are
+    // syntax, not text, and passing them through makes to_tsquery raise a syntax
+    // error that surfaces to the user as a 500.
     const tsQuery = query
       .trim()
       .split(/\s+/)
+      .map((word) => word.replace(/[&|!:*()'\\<>@]/g, '').trim())
+      .filter((word) => word.length > 0)
       .map((word) => `${word}:*`)
       .join(' & ');
+
+    if (!tsQuery) {
+      throw new BadRequestException('Search query cannot be empty');
+    }
+
+    try {
+      return await this.searchFullText(searchDto, tsQuery, skip);
+    } catch (error) {
+      // The tsvector column is created by an out-of-band migration
+      // (prisma/sql/001_document_search_vector.sql) and Prisma does not manage
+      // it, so it can legitimately be absent. Degrade to a portable LIKE search
+      // instead of failing the request.
+      this.logger.warn(
+        `Full-text search unavailable, falling back to substring search: ${error?.message}`,
+      );
+      return this.searchFallback(searchDto, where, skip);
+    }
+  }
+
+  /**
+   * PostgreSQL tsvector search. Requires the `search_vector` column.
+   */
+  private async searchFullText(
+    searchDto: SearchDocumentDto,
+    tsQuery: string,
+    skip: number,
+  ) {
+    const { page = 1, limit = 20, direction, classification, status, entityId } = searchDto;
 
     // Execute full-text search using raw SQL
     const documents = await this.prisma.$queryRaw<any[]>`
@@ -1146,6 +1240,65 @@ export class DocumentsService {
     );
 
     return createPaginatedResponse(enrichedDocuments, { total, page, limit });
+  }
+
+  /**
+   * Portable substring search, used when the tsvector column is unavailable.
+   * Slower than the FTS path but correct on any PostgreSQL instance.
+   */
+  private async searchFallback(
+    searchDto: SearchDocumentDto,
+    filters: Prisma.DocumentWhereInput,
+    skip: number,
+  ) {
+    const { query, page = 1, limit = 20 } = searchDto;
+
+    const where: Prisma.DocumentWhereInput = {
+      ...filters,
+      OR: [
+        { title: { contains: query, mode: 'insensitive' } },
+        { content: { contains: query, mode: 'insensitive' } },
+        { correlativeNumber: { contains: query, mode: 'insensitive' } },
+      ],
+    };
+
+    const [documents, total] = await Promise.all([
+      this.prisma.document.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          entity: {
+            select: { id: true, name: true, shortName: true, type: true },
+          },
+          createdBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              position: true,
+            },
+          },
+          responsible: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              position: true,
+            },
+          },
+        },
+      }),
+      this.prisma.document.count({ where }),
+    ]);
+
+    return createPaginatedResponse(
+      documents.map((doc) => ({ ...doc, rank: 0 })),
+      { total, page, limit },
+    );
   }
 
   /**

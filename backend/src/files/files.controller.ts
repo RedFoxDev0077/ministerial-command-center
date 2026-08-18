@@ -29,8 +29,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Public } from '../auth/decorators/public.decorator';
-import { createReadStream, existsSync } from 'fs';
-import { join } from 'path';
+import { createReadStream, existsSync, statSync } from 'fs';
+import { normalize, resolve, sep } from 'path';
 
 @ApiTags('Files')
 @ApiBearerAuth()
@@ -264,20 +264,24 @@ export class FilesController {
     @Param('0') filepath: string,
     @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
-    console.log('=== FILES CONTROLLER - SERVE ENDPOINT HIT ===');
-    console.log('File path:', filepath);
-    console.log('Timestamp:', new Date().toISOString());
+    // The wildcard segment is attacker-controlled and this endpoint is @Public().
+    // Resolve it and confirm the result is still inside the uploads directory,
+    // otherwise `../` traversal reads arbitrary files (backend/.env, keys, ...).
+    const uploadsRoot = resolve(process.cwd(), 'uploads');
+    const fullPath = resolve(uploadsRoot, normalize(filepath));
 
-    // Construct full path
-    const fullPath = join(process.cwd(), 'uploads', filepath);
-
-    // Check if file exists
-    if (!existsSync(fullPath)) {
-      throw new NotFoundException(`File not found: ${filepath}`);
+    if (fullPath !== uploadsRoot && !fullPath.startsWith(uploadsRoot + sep)) {
+      throw new NotFoundException('File not found');
     }
 
-    // Get filename for Content-Disposition header
-    const filename = filepath.split('/').pop() || 'download';
+    // Reject anything that is not a regular file (directories, sockets, fifos).
+    if (!existsSync(fullPath) || !statSync(fullPath).isFile()) {
+      throw new NotFoundException('File not found');
+    }
+
+    // Get filename for Content-Disposition header (quotes stripped so the
+    // value cannot break out of the header it is embedded in)
+    const filename = (fullPath.split(sep).pop() || 'download').replace(/["\\\r\n]/g, '');
 
     // Create read stream
     const fileStream = createReadStream(fullPath);

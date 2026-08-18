@@ -1,7 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MinLength, IsEnum, IsOptional } from 'class-validator';
-import { Role } from '@prisma/client';
+import { IsEmail, IsString, MinLength, IsOptional } from 'class-validator';
 
+/**
+ * Self-registration payload.
+ *
+ * NOTE: `role` is deliberately NOT accepted here. Public registration always
+ * creates a LECTOR (read-only) account; only an ADMIN can grant a higher role,
+ * via POST /api/users or PATCH /api/users/:id. Accepting a client-supplied role
+ * on a public endpoint would let anyone self-provision as ADMIN — which in this
+ * system also means Minister signature authority (see MinisterValidationService).
+ */
 export class RegisterDto {
   @ApiProperty({ example: 'user@mttsia.gob.gq' })
   @IsEmail({}, { message: 'Email inválido' })
@@ -19,10 +27,6 @@ export class RegisterDto {
   @ApiProperty({ example: 'Pérez' })
   @IsString()
   lastName: string;
-
-  @ApiProperty({ example: 'LECTOR', enum: Role })
-  @IsEnum(Role)
-  role: Role;
 
   @ApiProperty({ example: 'dept_123' })
   @IsString()

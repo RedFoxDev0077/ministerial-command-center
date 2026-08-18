@@ -5,7 +5,53 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { AppModule } from './app.module';
 
+/**
+ * Refuse to start on a misconfigured secret rather than booting with an unset
+ * or placeholder signing key. A weak JWT_SECRET means forgeable access tokens,
+ * which in this system means forgeable Minister authority.
+ */
+function validateEnvironment() {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const errors: string[] = [];
+
+  for (const key of ['JWT_SECRET', 'JWT_REFRESH_SECRET']) {
+    const value = process.env[key];
+
+    if (!value) {
+      errors.push(`${key} is not set. Generate one with: openssl rand -hex 64`);
+      continue;
+    }
+
+    if (isProduction) {
+      if (value.length < 32) {
+        errors.push(`${key} is too short (${value.length} chars, need >= 32).`);
+      }
+      if (/your-|change-in-production|secret-key-here/i.test(value)) {
+        errors.push(`${key} still contains a placeholder value from .env.example.`);
+      }
+    }
+  }
+
+  if (process.env.JWT_SECRET && process.env.JWT_SECRET === process.env.JWT_REFRESH_SECRET) {
+    errors.push('JWT_SECRET and JWT_REFRESH_SECRET must be different values.');
+  }
+
+  if (isProduction && !process.env.CORS_ORIGIN) {
+    errors.push('CORS_ORIGIN must be set explicitly in production.');
+  }
+
+  if (errors.length > 0) {
+    // eslint-disable-next-line no-console
+    console.error(
+      ['', '❌ Invalid environment configuration:', ...errors.map((e) => `   - ${e}`), ''].join('\n'),
+    );
+    process.exit(1);
+  }
+}
+
 async function bootstrap() {
+  validateEnvironment();
+
   const app = await NestFactory.create(AppModule);
 
   // Trust proxy - required when behind nginx reverse proxy

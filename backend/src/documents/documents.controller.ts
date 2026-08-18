@@ -168,12 +168,16 @@ export class DocumentsController {
 
   @Get('public/:id')
   @Public()
-  @ApiOperation({ summary: 'Get document by ID (public access for QR codes)' })
+  @ApiOperation({
+    summary: 'Get document by ID (public access for QR codes) — redacted projection',
+  })
   @ApiParam({ name: 'id', description: 'Document UUID' })
   @ApiResponse({ status: 200, description: 'Document retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Document not found' })
   findOnePublic(@Param('id') id: string) {
-    return this.documentsService.findOne(id);
+    // Must stay on findOnePublic: findOne() returns decree notes, AI analysis,
+    // internal comments and staff emails to an unauthenticated caller.
+    return this.documentsService.findOnePublic(id);
   }
 
   @Get('files/:fileId/download')
@@ -544,7 +548,7 @@ export class DocumentsController {
 
   // File Versioning Endpoints
   @Get('files/:fileId/versions')
-  @Public()
+  @Roles('ADMIN', 'GABINETE', 'REVISOR', 'LECTOR')
   @ApiOperation({ summary: 'Get file version history' })
   @ApiParam({ name: 'fileId', description: 'File UUID' })
   @ApiResponse({ status: 200, description: 'Version history retrieved successfully' })
@@ -569,7 +573,7 @@ export class DocumentsController {
   }
 
   @Get('files/:fileId/versions/:versionNumber/download')
-  @Public()
+  @Roles('ADMIN', 'GABINETE', 'REVISOR', 'LECTOR')
   @ApiOperation({ summary: 'Download a specific file version' })
   @ApiParam({ name: 'fileId', description: 'File UUID' })
   @ApiParam({ name: 'versionNumber', description: 'Version number' })

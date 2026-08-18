@@ -229,15 +229,31 @@ tail -f /var/log/nginx/error.log
 
 ## 🔐 Credentials
 
-All scripts use these hardcoded credentials:
-- **VPS IP**: 72.61.41.94
-- **User**: root
-- **Password**: NDSw222arle#
+**Never hardcode credentials in these scripts or in this file** — this directory
+is committed to git, so anything written here is permanently disclosed to
+everyone with repository access.
 
-**⚠️ Security Note**: For production, consider:
-1. Using SSH keys instead of password
-2. Creating a dedicated deployment user
-3. Storing credentials in environment variables
+All scripts read connection details from the environment:
+
+```bash
+export VPS_IP="<server ip>"
+export VPS_USER="<deploy user>"
+# Optional. Omit entirely when using SSH keys (recommended).
+export VPS_PASSWORD="<password>"
+```
+
+Keep these in a **gitignored** file (e.g. `.env.deploy`) and `source` it:
+
+```bash
+source .env.deploy && ./scripts/deploy-backend.sh
+```
+
+**Recommended hardening**:
+1. Use SSH keys instead of a password — `ssh-copy-id $VPS_USER@$VPS_IP`, then
+   leave `VPS_PASSWORD` unset. The scripts fall back to key auth automatically.
+2. Create a dedicated deployment user instead of deploying as `root`.
+3. Rotate any credential that has ever been committed to git — removing it from
+   the working tree does not remove it from history.
 
 ---
 
