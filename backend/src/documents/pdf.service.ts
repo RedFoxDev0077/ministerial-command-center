@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import * as PDFDocument from 'pdfkit';
+import PDFDocument from 'pdfkit';
 import { Response } from 'express';
 import { PrismaService } from '../prisma/prisma.service';
 import * as path from 'path';

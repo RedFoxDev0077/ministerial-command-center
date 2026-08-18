@@ -3,8 +3,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { QrService } from './qr.service';
 import { DocumentNumberingService } from './document-numbering.service';
 import { StorageService } from '../storage/storage.service';
-import * as PDFDocument from 'pdfkit';
-import * as sharp from 'sharp';
+import PDFDocument from 'pdfkit';
+import sharp from 'sharp';
 import { COAT_OF_ARMS_BASE64 } from './assets/coat-of-arms.constant';
 
 /**

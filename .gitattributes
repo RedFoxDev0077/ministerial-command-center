@@ -1,0 +1,27 @@
+# Normalize line endings so files committed from Windows still work on the
+# Linux CI runner and the VPS. A CRLF in a shell script or a workflow heredoc
+# fails with `bad interpreter: /bin/bash^M` or an unterminated heredoc.
+* text=auto eol=lf
+
+# Files that must be LF regardless of platform.
+*.sh        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.sql       text eol=lf
+Dockerfile  text eol=lf
+
+# Windows-only helpers keep CRLF.
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+
+# Binary assets — never touch these.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.docx  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
