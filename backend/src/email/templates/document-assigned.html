@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documento Asignado</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+    .document-box { background: white; padding: 20px; border-left: 4px solid #3b82f6; margin: 20px 0; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .button { display: inline-block; padding: 12px 30px; background: #3b82f6; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>✏️ Documento Asignado</h1>
+  </div>
+
+  <div class="content">
+    <p>Estimado/a <strong>{{userName}}</strong>,</p>
+
+    <p>Se le ha asignado un nuevo documento por <strong>{{assignedBy}}</strong>:</p>
+
+    <div class="document-box">
+      <h3 style="margin-top:0; color:#3b82f6;">{{correlativeNumber}}</h3>
+      <p><strong>Título:</strong> {{documentTitle}}</p>
+      <p><strong>Prioridad:</strong> {{priority}}</p>
+      <p><strong>Asignado por:</strong> {{assignedBy}}</p>
+    </div>
+
+    <p>Es su responsabilidad gestionar este documento. Por favor, acceda al sistema para ver más detalles.</p>
+
+    <a href="{{documentUrl}}" class="button">Ver Documento</a>
+  </div>
+
+  <div class="footer">
+    <p><strong>Centro de Comando Ministerial - MTTSIA</strong><br>
+    Guinea Ecuatorial</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+# ---------------------------------------------------------------------------
+# Ministerial Command Center
+# Frontend: Vite + React + TypeScript  |  Backend: NestJS + Prisma
+# ---------------------------------------------------------------------------
+
+# --- Dependencies ----------------------------------------------------------
+node_modules
+.pnp
+.pnp.js
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnpm-store/
+
+# --- Build output ----------------------------------------------------------
+dist
+dist-ssr
+build/
+out/
+*.tsbuildinfo
+
+# --- Caches ----------------------------------------------------------------
+.vite/
+.cache/
+.eslintcache
+.parcel-cache/
+.turbo/
+.swc/
+
+# --- Testing ---------------------------------------------------------------
+coverage/
+.nyc_output/
+*.lcov
+
+# --- Environment & secrets -------------------------------------------------
+# Ignore every .env variant (root and backend/), keep the templates.
+.env
+.env.*
+*.env
+!.env.example
+!.env.*.example
+!.env.template
+!.env.sample
+
+# Credentials, keys and certificates (VPS / nginx deploy scripts)
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+id_rsa
+id_rsa.*
+*.ppk
+secrets.json
+credentials.json
+serviceAccount*.json
+
+# --- Runtime data ----------------------------------------------------------
+# User-uploaded files served by the backend.
+# Ignore the contents, not the directory itself, so .gitkeep can survive
+# (a bare `uploads/` rule would stop git descending and defeat the negation).
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Local databases & dumps
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.sql.gz
+backups/
+
+# --- Logs ------------------------------------------------------------------
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- Deployment archives & temp files --------------------------------------
+*.tar.gz
+*.tgz
+*.zip
+*.tmp
+*.tmp.*
+*.bak
+*.orig
+*.rej
+*.local
+
+# Ad-hoc deploy / codegen scripts (not part of the tracked toolchain)
+deploy.py
+deploy_*.py
+generate_*.py
+
+# --- Generated documents ---------------------------------------------------
+*.docx
+*.pdf
+~$*
+
+# --- Hosting platforms -----------------------------------------------------
+.vercel
+.netlify
+.firebase/
+
+# --- Editors & IDEs --------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+
+# --- Operating system ------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- Claude Code -----------------------------------------------------------
+.claude/settings.local.json
+.claude/*.local.json
+
+# --- Misc ------------------------------------------------------------------
+# Temporary review/feedback drops
+feedback/

@@ -1,0 +1,707 @@
+{
+  "country": "Guinea Ecuatorial",
+  "lastUpdated": "2024-08-23",
+  "source": "Decreto Presidencial Núm. 34/2024 y 86/2024",
+
+  "ministries": [
+    {
+      "id": "min-001",
+      "name": "Ministerio de Estado a la Presidencia del Gobierno",
+      "shortName": "MEPG",
+      "description": "Encargado de las Relaciones con el Parlamento y Asuntos Jurídicos del Estado",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Sergio Esono Abeso Tomo",
+        "position": "Ministro de Estado",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-002",
+      "name": "Ministerio de Estado de Seguridad Nacional",
+      "shortName": "MESN",
+      "description": "Encargado de la Seguridad Nacional",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Nicolas Obama Nchama",
+        "position": "Ministro de Estado",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-003",
+      "name": "Ministerio de Estado de Asuntos Exteriores, Cooperación Internacional y Diáspora",
+      "shortName": "MAECID",
+      "description": "Ministerio de Asuntos Exteriores",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Simeon Oyono Esono Angue",
+        "position": "Ministro de Estado",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Maria Angeles Miaga Bibang",
+        "position": "Viceministra",
+        "title": "EXCMA. SEÑORA"
+      }
+    },
+    {
+      "id": "min-004",
+      "name": "Ministerio de Estado del Interior y Administración Local",
+      "shortName": "MEIAL",
+      "description": "Interior y Administración Local",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Faustino Ndong Esono Eyang",
+        "position": "Ministro de Estado",
+        "title": "EXCMO. SEÑOR"
+      },
+      "delegateMinister": {
+        "name": "Fidel Nsue Micha",
+        "position": "Ministro Delegado",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-005",
+      "name": "Ministerio de Estado de Educación, Ciencias, Enseñanza Profesional y Deportes",
+      "shortName": "MEECEPD",
+      "description": "Educación y Enseñanza",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Clemente Engonga Nguema Onguene",
+        "position": "Ministro de Estado",
+        "title": "EXCMO. SEÑOR"
+      },
+      "delegateMinister": {
+        "name": "Constantino Obiang Esono Ayingono",
+        "position": "Ministro Delegado - Infraestructuras Escolares y Deportivas",
+        "title": "EXCMO SEÑOR"
+      },
+      "viceMinisters": [
+        {
+          "name": "Vicente Nsue Nsue Mengue",
+          "position": "Viceministro de Educación, Ciencias y Enseñanza Profesional",
+          "title": "EXCMO. SEÑOR"
+        },
+        {
+          "name": "Pedro Nguema Ndong",
+          "position": "Viceministro de Juventud y Deportes",
+          "title": "EXCMO. SEÑOR"
+        }
+      ]
+    },
+    {
+      "id": "min-006",
+      "name": "Ministerio de Estado de Obras Públicas y Urbanismo",
+      "shortName": "MEOPU",
+      "description": "Obras Públicas y Desarrollo Urbano",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Clemente Ferreiro Villarino",
+        "position": "Ministro de Estado",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Pascual Ondo Nse Oyana",
+        "position": "Viceministro",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-007",
+      "name": "Ministerio de Estado de Información, Prensa y Cultura",
+      "shortName": "MEIPC",
+      "description": "Información, Medios y Cultura",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Jeronimo Osa Osa Ecoro",
+        "position": "Ministro de Estado",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Manuel Ndong Bibang",
+        "position": "Viceministro",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-008",
+      "name": "Ministerio a la Presidencia de la República - Gabinete Civil de Su Excelencia",
+      "shortName": "MPRG",
+      "description": "Gabinete Civil Presidencial",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Ramon Nka Ela Nchama",
+        "position": "Ministro a la Presidencia",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Salvador Ndong Nsue",
+        "position": "Viceministro del Gabinete Civil de Su Excelencia",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-009",
+      "name": "Ministerio a la Presidencia de la República - Seguridad Exterior",
+      "shortName": "MPRSE",
+      "description": "Encargado de la Seguridad Exterior",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Juan Antonio Bibang Nchuchuma",
+        "position": "Ministro a la Presidencia",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Carmelo Ovono Obiang",
+        "position": "Viceministro de Seguridad Exterior",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-010",
+      "name": "Secretaría General de la Presidencia del Gobierno",
+      "shortName": "SGPG",
+      "description": "Secretaría General Presidencial",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Job Obiang Esono Mbengono",
+        "position": "Ministro - Secretario General",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-011",
+      "name": "Ministerio a la Presidencia del Gobierno - Integración",
+      "shortName": "MPGI",
+      "description": "Encargado de Integración",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Lucas Abaga Nchama",
+        "position": "Ministro a la Presidencia",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-012",
+      "name": "Ministerio de Defensa Nacional",
+      "shortName": "MDN",
+      "description": "Defensa y Fuerzas Armadas",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Victoriano Nsue Okomo",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "delegateMinister": {
+        "name": "Candido Ncogo Engono",
+        "position": "Ministro Delegado de Defensa Nacional",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Alfredo Abeso Nvono Onguene",
+        "position": "Viceministro",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-013",
+      "name": "Ministerio de Sanidad, Bienestar Social e Infraestructuras Sanitarias",
+      "shortName": "MSBSIS",
+      "description": "Salud Pública y Bienestar Social",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Mitoha Ondo Ayecaba",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "delegateMinister": {
+        "name": "Praxedes Rabat Makambo",
+        "position": "Ministro Delegado",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Antonio Martin Elo Elo",
+        "position": "Viceministro",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-014",
+      "name": "Ministerio de Justicia, Culto y Derechos Humanos",
+      "shortName": "MJCDH",
+      "description": "Justicia y Derechos Humanos",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Reginaldo Biyogo Mba Ndong Anguesomo",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Rimme Bossio Riocalo",
+        "position": "Viceministra",
+        "title": "EXCMA. SEÑORA"
+      }
+    },
+    {
+      "id": "min-015",
+      "name": "Ministerio de Hacienda, Planificación y Desarrollo Económico",
+      "shortName": "MHPDE",
+      "description": "Hacienda y Economía",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Ivan Bacale Ebe Molina",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Pedro Abeso Obiang Eyang",
+        "position": "Viceministro",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-016",
+      "name": "Ministerio de Trabajo y Fomento de Empleo",
+      "shortName": "MTFE",
+      "description": "Trabajo y Empleo",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Alfredo Mitogo Mitogo Ada",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "delegateMinister": {
+        "name": "Manuel Cristobal Morgades Ichaka",
+        "position": "Ministro Delegado",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-017",
+      "name": "Ministerio de Agricultura, Ganadería, Bosques, Pesca y Medio Ambiente",
+      "shortName": "MAGBPMA",
+      "description": "Agricultura y Medio Ambiente",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Juan Jose Ndong Tom",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "delegateMinister": {
+        "name": "Deogracias Obiang Mbomio",
+        "position": "Ministro Delegado - Encargado de Bosques y Medio Ambiente",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Juan Nko Mbula",
+        "position": "Viceministro - Encargado de Pesca y Recursos Hídricos",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-018",
+      "name": "Ministerio de Hidrocarburos y Desarrollo Minero",
+      "shortName": "MHDM",
+      "description": "Petróleo, Gas y Minería",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Antonio Oburu Ondo",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "delegateMinister": {
+        "name": "Domingo Mba Esono",
+        "position": "Ministro Delegado",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-019",
+      "name": "Ministerio de Electricidad y Energías Renovables",
+      "shortName": "MEER",
+      "description": "Energía Eléctrica y Renovable",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Gervasio Engonga Mba",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Cesar Augusto Hinestrosa Gomez",
+        "position": "Viceministro",
+        "title": "EXCMO SEÑOR"
+      }
+    },
+    {
+      "id": "min-020",
+      "name": "Ministerio de Turismo e Infraestructuras Turísticas",
+      "shortName": "MTIT",
+      "description": "Turismo y Desarrollo Turístico",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Antonio Oliveira Borupu",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Santiago Casto Nvono Bibang",
+        "position": "Viceministro",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-021",
+      "name": "Ministerio de Igualdad de Género, Asuntos Sociales y Artesanía",
+      "shortName": "MIGASA",
+      "description": "Igualdad de Género y Asuntos Sociales",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Maria Consuelo Nguema Oyana",
+        "position": "Ministra",
+        "title": "EXCMA. SEÑORA"
+      },
+      "viceminister": {
+        "name": "Maria del Pilar Madja Nvono Nsa",
+        "position": "Viceministra",
+        "title": "EXCMA. SEÑORA"
+      }
+    },
+    {
+      "id": "min-022",
+      "name": "Ministerio de Transportes, Telecomunicaciones y Sistemas de Inteligencia Artificial",
+      "shortName": "MTTSIA",
+      "description": "Transportes, Telecomunicaciones e IA",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Honorato Evita Oma",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Alberto Ndong Obiang Lima",
+        "position": "Viceministro - Encargado de Transportes",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-023",
+      "name": "Ministerio de la Función Pública, Reforma Administrativa y Seguridad Social",
+      "shortName": "MFPRASS",
+      "description": "Administración Pública y Seguridad Social",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Candido Muatetema Baita",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Lucas Nguema Mbulito",
+        "position": "Viceministro",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-024",
+      "name": "Ministerio de Aviación Civil e Infraestructuras Aeroportuarias",
+      "shortName": "MACIA",
+      "description": "Aviación Civil y Aeropuertos",
+      "type": "GOVERNMENT_MINISTRY",
+      "minister": {
+        "name": "Bartolome Monsuy Mañe Andeme",
+        "position": "Ministro",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Antonio Ngua Mba Eyang",
+        "position": "Viceministro",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-025",
+      "name": "Ministerio Delegado a la Presidencia de la República - Ceremonias y Traducciones",
+      "shortName": "MDPRCT",
+      "description": "Encargado de Ceremonias y Traducciones",
+      "type": "GOVERNMENT_MINISTRY",
+      "delegateMinister": {
+        "name": "Armando Dougan Champion",
+        "position": "Ministro Delegado",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-026",
+      "name": "Ministerio Delegado de Asuntos Exteriores, Cooperación Internacional y Diáspora",
+      "shortName": "MDAECID",
+      "description": "Delegado de Asuntos Exteriores",
+      "type": "GOVERNMENT_MINISTRY",
+      "delegateMinister": {
+        "name": "Marcos Mba Ondo",
+        "position": "Ministro Delegado",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-027",
+      "name": "Ministerio Delegado de Seguridad Nacional",
+      "shortName": "MDSN",
+      "description": "Delegado de Seguridad Nacional",
+      "type": "GOVERNMENT_MINISTRY",
+      "delegateMinister": {
+        "name": "Heriberto Miko Mbengono",
+        "position": "Ministro Delegado",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-028",
+      "name": "Ministerio Delegado de Juventud y Deportes",
+      "shortName": "MDJD",
+      "description": "Delegado de Juventud y Deportes",
+      "type": "GOVERNMENT_MINISTRY",
+      "delegateMinister": {
+        "name": "Andres Ikuga Fernandez",
+        "position": "Ministro Delegado",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-029",
+      "name": "Ministerio Delegado de Comercio, Promoción de Empresas e Industria",
+      "shortName": "MDCPEI",
+      "description": "Comercio e Industria",
+      "type": "GOVERNMENT_MINISTRY",
+      "delegateMinister": {
+        "name": "Jeronimo Carlos Osa Osa Nzang",
+        "position": "Ministro Delegado",
+        "title": "EXCMO. SEÑOR"
+      },
+      "viceminister": {
+        "name": "Avelino Mocache Mehenga",
+        "position": "Viceministro",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-030",
+      "name": "Ministerio Delegado de la Tesorería y Patrimonio del Estado",
+      "shortName": "MDTPE",
+      "description": "Tesorería y Patrimonio Estatal",
+      "type": "GOVERNMENT_MINISTRY",
+      "delegateMinister": {
+        "name": "Milagrosa Obono Angue",
+        "position": "Ministra Delegada",
+        "title": "EXCMA. SEÑORA"
+      }
+    },
+    {
+      "id": "min-031",
+      "name": "Ministerio Delegado de Catastro y Ordenación de Tierras",
+      "shortName": "MDCOT",
+      "description": "Catastro y Tierras",
+      "type": "GOVERNMENT_MINISTRY",
+      "delegateMinister": {
+        "name": "Justino Nchama Ondo",
+        "position": "Ministro Delegado",
+        "title": "EXCMO. SEÑOR"
+      }
+    },
+    {
+      "id": "min-032",
+      "name": "Viceministerio a la Presidencia de la República - Misiones",
+      "shortName": "VPRM",
+      "description": "Encargada de Misiones",
+      "type": "GOVERNMENT_MINISTRY",
+      "viceminister": {
+        "name": "Maria Jesus Evuna Andeme",
+        "position": "Viceministra",
+        "title": "EXCMA. SEÑORA"
+      }
+    },
+    {
+      "id": "min-033",
+      "name": "Viceministerio a la Presidencia de la República - Auditorías",
+      "shortName": "VPRA",
+      "description": "Encargado de Auditorías",
+      "type": "GOVERNMENT_MINISTRY",
+      "viceminister": {
+        "name": "Juan Abaha Elo",
+        "position": "Viceministro",
+        "title": "EXCMO. SEÑOR"
+      }
+    }
+  ],
+
+  "secretaries": [
+    {
+      "id": "sec-001",
+      "name": "Fernando Ngu Nve",
+      "position": "Secretario de Estado del Gabinete Civil de Su Excelencia",
+      "ministry": "min-008",
+      "responsibility": "Gestión Económica y Administrativa"
+    },
+    {
+      "id": "sec-002",
+      "name": "Maria Luisa Mangue Ondo",
+      "position": "Secretaria de Estado de Traducciones y Ceremonias",
+      "ministry": "min-025",
+      "responsibility": "Traducciones y Ceremonias"
+    },
+    {
+      "id": "sec-003",
+      "name": "Argelio Ndong Nkoni",
+      "position": "Secretario de Estado de Defensa Nacional",
+      "ministry": "min-012",
+      "responsibility": "Defensa Nacional"
+    },
+    {
+      "id": "sec-004",
+      "name": "Jose Ondo Ondo Nchama",
+      "position": "Secretario de Estado de Seguridad Nacional",
+      "ministry": "min-002",
+      "responsibility": "Seguridad Nacional"
+    },
+    {
+      "id": "sec-005",
+      "name": "Mari-Cruz Evuna Andeme",
+      "position": "Secretaria de Estado de Asuntos Exteriores, Cooperación Internacional y Diáspora",
+      "ministry": "min-003",
+      "responsibility": "Cooperación Multilateral"
+    },
+    {
+      "id": "sec-006",
+      "name": "Faustino Edu Micha",
+      "position": "Secretario de Estado del Interior y Administración Local",
+      "ministry": "min-004",
+      "responsibility": "Interior y Administración Local"
+    },
+    {
+      "id": "sec-007",
+      "name": "Monica Okomo Nguema",
+      "position": "Secretaria de Estado de Sanidad, Bienestar Social e Infraestructuras Sanitarias",
+      "ministry": "min-013",
+      "responsibility": "Gestión Administrativa y Económica de los Servicios Sanitarios"
+    },
+    {
+      "id": "sec-008",
+      "name": "Constancia Mangue Obiang Lima",
+      "position": "Secretaria de Estado de Educación, Ciencias y Enseñanza Profesional",
+      "ministry": "min-005",
+      "responsibility": "Enseñanza Reglada"
+    },
+    {
+      "id": "sec-009",
+      "name": "Namabal Bilingung Ngung",
+      "position": "Secretario de Estado de Justicia, Culto y Derechos Humanos",
+      "ministry": "min-014",
+      "responsibility": "Justicia"
+    },
+    {
+      "id": "sec-010",
+      "name": "Maria Ebiaca Mohete",
+      "position": "Secretaria de Estado de Hacienda, Planificación y Desarrollo Económico",
+      "ministry": "min-015",
+      "responsibility": "Planificación"
+    },
+    {
+      "id": "sec-011",
+      "name": "Jose Domingo Ndong Bakale Ayetebe",
+      "position": "Secretario de Estado de Hacienda, Planificación y Desarrollo Económico",
+      "ministry": "min-015",
+      "responsibility": "Impuestos y Contribuciones"
+    },
+    {
+      "id": "sec-012",
+      "name": "Genovena Nsengbene Biyogo",
+      "position": "Secretaria de Estado de la Tesorería y Patrimonio del Estado",
+      "ministry": "min-030",
+      "responsibility": "Tesorería y Patrimonio"
+    },
+    {
+      "id": "sec-013",
+      "name": "Tomas Esono Nsue Aya",
+      "position": "Secretario de Estado de Obras Publicas y Urbanismo",
+      "ministry": "min-006",
+      "responsibility": "Carreteras y Peajes"
+    },
+    {
+      "id": "sec-014",
+      "name": "Juan Pedro Ava Nsolo",
+      "position": "Secretario de Estado de Comercio, Promoción de Empresas e Industria",
+      "ministry": "min-029",
+      "responsibility": "Comercio e Industria"
+    },
+    {
+      "id": "sec-015",
+      "name": "Deogracias Nsue Andong",
+      "position": "Secretario de Estado de Catastro y Ordenación de Tierras",
+      "ministry": "min-031",
+      "responsibility": "Catastro y Tierras"
+    },
+    {
+      "id": "sec-016",
+      "name": "Angel Francisco Ela Ngomo Nchama",
+      "position": "Secretario de Estado de Trabajo y Fomento de Empleo",
+      "ministry": "min-016",
+      "responsibility": "Trabajo y Empleo"
+    },
+    {
+      "id": "sec-017",
+      "name": "Carlos Esono Nututmu Ayi",
+      "position": "Secretario de Estado de Electricidad y Energías Renovables",
+      "ministry": "min-019",
+      "responsibility": "Energía Eléctrica"
+    },
+    {
+      "id": "sec-018",
+      "name": "Leoncio Brigol Piño",
+      "position": "Secretario de Estado de Información, Prensa y Cultura",
+      "ministry": "min-007",
+      "responsibility": "Información y Medios"
+    },
+    {
+      "id": "sec-019",
+      "name": "Nuria Lucia Beholi Epesi",
+      "position": "Secretaria de Estado de Turismo e Infraestructuras Turísticas",
+      "ministry": "min-020",
+      "responsibility": "Turismo"
+    },
+    {
+      "id": "sec-020",
+      "name": "Jose Eko Owono Mangue",
+      "position": "Secretario de Estado de Transportes, Telecomunicaciones y Sistemas de Inteligencia Artificial",
+      "ministry": "min-022",
+      "responsibility": "Transportes y Telecomunicaciones"
+    },
+    {
+      "id": "sec-021",
+      "name": "Raquel Hinestrosa Bodien",
+      "position": "Secretaria de Estado de Igualdad de Género, Asuntos Sociales y Artesanía",
+      "ministry": "min-021",
+      "responsibility": "Igualdad y Asuntos Sociales"
+    },
+    {
+      "id": "sec-022",
+      "name": "Maria Flavia Mba Obono",
+      "position": "Secretaria de Estado de la Función Pública, Reforma Administrativa y Seguridad Social",
+      "ministry": "min-023",
+      "responsibility": "Función Pública y Seguridad Social"
+    },
+    {
+      "id": "sec-023",
+      "name": "Pedro Obama Ragabo",
+      "position": "Secretario de Estado de Aviación Civil e Infraestructuras Aeroportuarias",
+      "ministry": "min-024",
+      "responsibility": "Aviación Civil"
+    },
+    {
+      "id": "sec-024",
+      "name": "Pedro Mabale Fuga Afang",
+      "position": "Secretario de Estado de Juventud y Deportes",
+      "ministry": "min-028",
+      "responsibility": "Juventud y Deportes"
+    }
+  ]
+}

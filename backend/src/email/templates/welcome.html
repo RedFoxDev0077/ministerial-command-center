@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenido</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; text-align: center; border-radius: 10px 10px 0 0; }
+    .logo { font-size: 48px; margin-bottom: 10px; }
+    .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+    .credentials-box { background: white; padding: 20px; border: 2px solid #667eea; margin: 20px 0; border-radius: 5px; }
+    .credential-item { background: #f3f4f6; padding: 10px; margin: 10px 0; border-radius: 5px; font-family: monospace; }
+    .button { display: inline-block; padding: 15px 40px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
+    .features { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; }
+    .feature-item { display: flex; align-items: start; margin: 15px 0; }
+    .feature-icon { font-size: 24px; margin-right: 15px; }
+    .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">🏛️</div>
+    <h1 style="margin:0;">¡Bienvenido!</h1>
+    <p style="margin:10px 0 0 0;">Centro de Comando Ministerial</p>
+  </div>
+
+  <div class="content">
+    <p>Estimado/a <strong>{{userName}}</strong>,</p>
+
+    <p>Bienvenido al <strong>Centro de Comando Ministerial</strong> del Ministerio de Transportes, Telecomunicaciones y Sistemas de IA (MTTSIA) de Guinea Ecuatorial.</p>
+
+    <p>Su cuenta ha sido creada exitosamente. Use las siguientes credenciales para acceder al sistema:</p>
+
+    <div class="credentials-box">
+      <h3 style="margin-top:0; color:#667eea;">Credenciales de Acceso</h3>
+      <div class="credential-item">
+        <strong>Email:</strong> {{email}}
+      </div>
+      <div class="credential-item">
+        <strong>Contraseña temporal:</strong> {{temporaryPassword}}
+      </div>
+      <p style="color:#dc2626; font-size:14px; margin:15px 0 0 0;">
+        ⚠️ <strong>Importante:</strong> Por seguridad, cambie su contraseña después del primer inicio de sesión.
+      </p>
+    </div>
+
+    <a href="{{loginUrl}}" class="button">Iniciar Sesión</a>
+
+    <div class="features">
+      <h3 style="color:#667eea;">Funcionalidades del Sistema</h3>
+      <div class="feature-item">
+        <div class="feature-icon">📄</div>
+        <div>
+          <strong>Gestión de Documentos</strong><br>
+          <span style="color:#666; font-size:14px;">Registre y gestione documentos de entrada y salida</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">✏️</div>
+        <div>
+          <strong>Firma Electrónica</strong><br>
+          <span style="color:#666; font-size:14px;">Firme documentos de manera digital y segura</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div>
+          <strong>Dashboard de Control</strong><br>
+          <span style="color:#666; font-size:14px;">Visualice estadísticas y documentos pendientes</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🤖</div>
+        <div>
+          <strong>Asistente IA</strong><br>
+          <span style="color:#666; font-size:14px;">Resuma y analice documentos automáticamente</span>
+        </div>
+      </div>
+    </div>
+
+    <p>Si tiene alguna pregunta o necesita ayuda, no dude en contactar al equipo de soporte técnico.</p>
+  </div>
+
+  <div class="footer">
+    <p><strong>Centro de Comando Ministerial</strong><br>
+    Ministerio de Transportes, Telecomunicaciones y Sistemas de IA<br>
+    Guinea Ecuatorial</p>
+    <p>Este es un correo automático. Por favor no responda a este mensaje.</p>
+  </div>
+</body>
+</html>

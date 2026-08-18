@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estado del Documento Actualizado</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+    .status-change { background: white; padding: 20px; margin: 20px 0; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .status-arrow { font-size: 24px; color: #10b981; text-align: center; margin: 10px 0; }
+    .button { display: inline-block; padding: 12px 30px; background: #10b981; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔄 Estado Actualizado</h1>
+  </div>
+
+  <div class="content">
+    <p>Estimado/a <strong>{{userName}}</strong>,</p>
+
+    <p>El estado del siguiente documento ha sido actualizado:</p>
+
+    <div class="status-change">
+      <h3 style="margin-top:0; color:#10b981;">{{correlativeNumber}}</h3>
+      <p><strong>Título:</strong> {{documentTitle}}</p>
+      <p><strong>Estado anterior:</strong> {{oldStatus}}</p>
+      <div class="status-arrow">↓</div>
+      <p><strong>Nuevo estado:</strong> <span style="color:#10b981; font-weight:bold;">{{newStatus}}</span></p>
+    </div>
+
+    <a href="{{documentUrl}}" class="button">Ver Documento</a>
+  </div>
+
+  <div class="footer">
+    <p><strong>Centro de Comando Ministerial - MTTSIA</strong></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recordatorio de Plazo</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+    .deadline-box { background: white; padding: 20px; border-left: 4px solid #ef4444; margin: 20px 0; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .countdown { background: #fef2f2; border: 2px dashed #ef4444; padding: 20px; text-align: center; border-radius: 5px; margin: 15px 0; }
+    .countdown-number { font-size: 48px; font-weight: bold; color: #ef4444; }
+    .button { display: inline-block; padding: 12px 30px; background: #ef4444; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>⏰ Recordatorio de Plazo</h1>
+  </div>
+
+  <div class="content">
+    <p>Estimado/a <strong>{{userName}}</strong>,</p>
+
+    <p><strong style="color:#ef4444;">¡URGENTE!</strong> El plazo para el siguiente documento está próximo a vencer:</p>
+
+    <div class="deadline-box">
+      <h3 style="margin-top:0; color:#ef4444;">{{correlativeNumber}}</h3>
+      <p><strong>Título:</strong> {{documentTitle}}</p>
+      <p><strong>Plazo límite:</strong> {{deadline}}</p>
+    </div>
+
+    <div class="countdown">
+      <div class="countdown-number">{{hoursRemaining}}</div>
+      <p style="margin:5px 0; font-weight:bold;">horas restantes</p>
+    </div>
+
+    <p>Por favor, tome las acciones necesarias antes del vencimiento del plazo.</p>
+
+    <a href="{{documentUrl}}" class="button">Ver Documento</a>
+  </div>
+
+  <div class="footer">
+    <p><strong>Centro de Comando Ministerial - MTTSIA</strong></p>
+  </div>
+</body>
+</html>

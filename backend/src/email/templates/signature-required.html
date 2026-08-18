@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firma Requerida</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+    .signature-box { background: white; padding: 20px; border-left: 4px solid #8b5cf6; margin: 20px 0; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .urgent { background: #fef2f2; border: 2px solid #dc2626; padding: 15px; border-radius: 5px; margin: 15px 0; }
+    .button { display: inline-block; padding: 12px 30px; background: #8b5cf6; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>✍️ Firma Requerida</h1>
+  </div>
+
+  <div class="content">
+    <p>Estimado/a <strong>{{userName}}</strong>,</p>
+
+    <p>Su firma es requerida para el siguiente documento:</p>
+
+    <div class="signature-box">
+      <h3 style="margin-top:0; color:#8b5cf6;">{{correlativeNumber}}</h3>
+      <p><strong>Título:</strong> {{documentTitle}}</p>
+      <p><strong>Plazo límite:</strong> {{deadline}}</p>
+    </div>
+
+    <div class="urgent">
+      <p style="margin:0; color:#dc2626; font-weight:bold;">⚠️ Acción Requerida</p>
+      <p style="margin:5px 0 0 0;">Por favor, revise y firme el documento antes del plazo establecido.</p>
+    </div>
+
+    <a href="{{documentUrl}}" class="button">Firmar Documento</a>
+  </div>
+
+  <div class="footer">
+    <p><strong>Centro de Comando Ministerial - MTTSIA</strong></p>
+  </div>
+</body>
+</html>

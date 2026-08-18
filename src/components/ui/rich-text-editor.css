@@ -1,0 +1,86 @@
+/*
+ * rich-text-editor.css
+ *
+ * Custom paragraph spacing and layout for CKEditor 5.
+ * Edit these values to change how text looks inside the document editor.
+ */
+
+/* === Paragraph spacing === */
+/* Controls space BETWEEN paragraphs (top and bottom margin) */
+.ck-editor__editable p {
+  margin-top: 0.4em;
+  margin-bottom: 0.8em;   /* ← increase this for more space between paragraphs */
+}
+
+/* === Line height (space between lines inside one paragraph) === */
+.ck-editor__editable {
+  line-height: 1.8;        /* ← 1.0 = tight, 1.5 = normal, 2.0 = double-space */
+}
+
+/* === Heading spacing === */
+.ck-editor__editable h1 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-size: 1.8em;
+  font-weight: bold;
+}
+
+.ck-editor__editable h2 {
+  margin-top: 0.8em;
+  margin-bottom: 0.4em;
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+.ck-editor__editable h3 {
+  margin-top: 0.6em;
+  margin-bottom: 0.3em;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+/* === List spacing === */
+.ck-editor__editable ul,
+.ck-editor__editable ol {
+  margin-top: 0.4em;
+  margin-bottom: 0.8em;
+  padding-left: 2em;
+}
+
+.ck-editor__editable li {
+  margin-bottom: 0.3em;   /* ← space between list items */
+}
+
+/* === Indent block === */
+/* Each click of the Indent button adds 40px left padding (set in indentBlock.offset above) */
+/* You can override the visual style here if needed */
+.ck-editor__editable [style*="padding-left"] {
+  border-left: 2px solid #e2e8f0;  /* ← subtle visual guide for indented paragraphs */
+}
+
+/* === Minimum editor height === */
+/* The minHeight prop controls this via inline style, but you can also set a CSS minimum */
+.ck-editor__editable {
+  min-height: 250px;
+  padding: 1rem 1.25rem;
+}
+
+/* === Dark mode support === */
+.dark .ck-editor__editable {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+}
+
+.dark .ck.ck-toolbar {
+  background-color: hsl(var(--muted));
+  border-color: hsl(var(--border));
+}
+
+.dark .ck.ck-toolbar .ck-button {
+  color: hsl(var(--foreground));
+}
+
+.dark .ck.ck-toolbar .ck-button:hover {
+  background-color: hsl(var(--accent));
+}

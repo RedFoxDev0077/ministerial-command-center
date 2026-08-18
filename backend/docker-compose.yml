@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ministerial-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ministerial_user
+      POSTGRES_PASSWORD: ministerial_pass_2024
+      POSTGRES_DB: ministerial_command_center
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ministerial-network
+
+  backend:
+    build: .
+    container_name: ministerial-backend
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: "postgresql://ministerial_user:ministerial_pass_2024@postgres:5432/ministerial_command_center?schema=public"
+      JWT_SECRET: "your-super-secret-jwt-key-change-in-production-64-chars-long-minimum"
+      JWT_REFRESH_SECRET: "your-super-secret-refresh-key-change-in-production-64-chars-long"
+      JWT_EXPIRATION: "15m"
+      JWT_REFRESH_EXPIRATION: "7d"
+      NODE_ENV: "development"
+      PORT: 3000
+      CORS_ORIGIN: "http://localhost:5173,http://localhost:3000"
+    ports:
+      - "3000:3000"
+    networks:
+      - ministerial-network
+
+volumes:
+  postgres_data:
+
+networks:
+  ministerial-network:
+    driver: bridge

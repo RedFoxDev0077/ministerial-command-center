@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documento Decretado</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+    .document-box { background: white; padding: 20px; border-left: 4px solid #667eea; margin: 20px 0; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .priority { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+    .priority-high { background: #fee; color: #c00; }
+    .priority-medium { background: #ffecd1; color: #f76700; }
+    .priority-low { background: #e8f4fd; color: #0066cc; }
+    .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📄 Documento Decretado</h1>
+  </div>
+
+  <div class="content">
+    <p>Estimado/a <strong>{{userName}}</strong>,</p>
+
+    <p>Se le ha decretado el siguiente documento para su revisión y gestión:</p>
+
+    <div class="document-box">
+      <h3 style="margin-top:0; color:#667eea;">{{correlativeNumber}}</h3>
+      <p><strong>Título:</strong> {{documentTitle}}</p>
+      <p><strong>Entidad:</strong> {{entityName}}</p>
+      <p><strong>Prioridad:</strong> <span class="priority priority-{{priority}}">{{priority}}</span></p>
+    </div>
+
+    <p>Por favor, acceda al sistema para revisar el documento y tomar las acciones correspondientes.</p>
+
+    <a href="{{documentUrl}}" class="button">Ver Documento</a>
+
+    <p style="color:#666; font-size:14px;">Si el botón no funciona, copie y pegue este enlace en su navegador:<br>
+    <span style="word-break:break-all;">{{documentUrl}}</span></p>
+  </div>
+
+  <div class="footer">
+    <p><strong>Centro de Comando Ministerial</strong><br>
+    Ministerio de Transportes, Telecomunicaciones y Sistemas de IA<br>
+    Guinea Ecuatorial</p>
+    <p>Este es un correo automático. Por favor no responda a este mensaje.</p>
+  </div>
+</body>
+</html>
