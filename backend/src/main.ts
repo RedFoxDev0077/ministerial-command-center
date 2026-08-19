@@ -100,11 +100,24 @@ async function bootstrap() {
     .addTag('entities', 'Entity management')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  // Swagger enumerates every endpoint and DTO. Keep it off in production unless
+  // explicitly opted into, so the API surface of a ministry system is not
+  // published to anonymous callers.
+  const enableSwagger =
+    process.env.ENABLE_SWAGGER === 'true' || process.env.NODE_ENV !== 'production';
+
+  if (enableSwagger) {
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document);
+  }
 
   const port = process.env.PORT || 3000;
-  await app.listen(port);
+  // Bind to loopback by default: nginx is the only intended entry point, and a
+  // directly reachable API bypasses its body-size limit and lets a caller spoof
+  // X-Forwarded-For against the rate limiter (see `trust proxy` above).
+  // Set HOST=0.0.0.0 only where the API must be reached directly (e.g. Docker).
+  const host = process.env.HOST || '127.0.0.1';
+  await app.listen(port, host);
 
   console.log(`
   ╔══════════════════════════════════════════════════════╗
