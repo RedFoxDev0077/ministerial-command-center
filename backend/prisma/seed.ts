@@ -1,6 +1,33 @@
 import { PrismaClient, Role, EntityType, Classification } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { seedGovernmentStructure } from './seeds/seed-government-structure';
+import { randomBytes } from 'crypto';
+
+// ---------------------------------------------------------------------------
+// Seed passwords
+//
+// Never hard-code credentials here: this file is committed, so any default
+// becomes a published password on every deployment that runs the seed.
+// Each account takes its password from an env var, or gets a random one that is
+// printed once at the end of the seed run.
+// ---------------------------------------------------------------------------
+const generatedPasswords: Record<string, string> = {};
+
+function seedPassword(envVar: string, label: string): string {
+  const fromEnv = process.env[envVar];
+  if (fromEnv && fromEnv.length >= 8) {
+    generatedPasswords[label] = '(from ' + envVar + ')';
+    return fromEnv;
+  }
+  const pool = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#%+=?';
+  let pw = '';
+  while (pw.length < 20) {
+    const b = randomBytes(1)[0];
+    if (b < 256 - (256 % pool.length)) pw += pool[b % pool.length];
+  }
+  generatedPasswords[label] = pw;
+  return pw;
+}
 
 const prisma = new PrismaClient();
 
@@ -204,7 +231,7 @@ async function main() {
   // ============================================
   console.log('👤 Creating users...');
 
-  const hashedPassword = await bcrypt.hash('Admin123!', 10);
+  const hashedPassword = await bcrypt.hash(seedPassword('SEED_ADMIN_PASSWORD', 'ADMIN    admin@mttsia.gob.gq'), 10);
 
   const adminUser = await prisma.user.create({
     data: {
@@ -222,7 +249,7 @@ async function main() {
   const gabineteUser = await prisma.user.create({
     data: {
       email: 'gabinete@mttsia.gob.gq',
-      password: await bcrypt.hash('Gabinete123!', 10),
+      password: await bcrypt.hash(seedPassword('SEED_GABINETE_PASSWORD', 'GABINETE gabinete@mttsia.gob.gq'), 10),
       firstName: 'Juan',
       lastName: 'Pérez García',
       role: Role.GABINETE,
@@ -235,7 +262,7 @@ async function main() {
   const revisorUser = await prisma.user.create({
     data: {
       email: 'revisor@mttsia.gob.gq',
-      password: await bcrypt.hash('Revisor123!', 10),
+      password: await bcrypt.hash(seedPassword('SEED_REVISOR_PASSWORD', 'REVISOR  revisor@mttsia.gob.gq'), 10),
       firstName: 'María',
       lastName: 'González López',
       role: Role.REVISOR,
@@ -248,7 +275,7 @@ async function main() {
   const lectorUser = await prisma.user.create({
     data: {
       email: 'lector@mttsia.gob.gq',
-      password: await bcrypt.hash('Lector123!', 10),
+      password: await bcrypt.hash(seedPassword('SEED_LECTOR_PASSWORD', 'LECTOR   lector@mttsia.gob.gq'), 10),
       firstName: 'Carlos',
       lastName: 'Martínez Ruiz',
       role: Role.LECTOR,
@@ -409,10 +436,13 @@ Ministerio de Transportes, Telecomunicaciones y Sistemas de IA`,
   console.log('   🏷️   Tags: 8');
   console.log('   ⚙️   Settings: 6');
   console.log('\n👤 Default Users Created:');
-  console.log('   - Admin: admin@mttsia.gob.gq / Admin123!');
-  console.log('   - Gabinete: gabinete@mttsia.gob.gq / Gabinete123!');
-  console.log('   - Revisor: revisor@mttsia.gob.gq / Revisor123!');
-  console.log('   - Lector: lector@mttsia.gob.gq / Lector123!');
+  for (const [label, pw] of Object.entries(generatedPasswords)) {
+    console.log('   - ' + label + '  ' + pw);
+  }
+  console.log('');
+  console.log('   ⚠  Shown once. Store them in a password manager and change them after first login.');
+  console.log('   ⚠  Set SEED_ADMIN_PASSWORD / SEED_GABINETE_PASSWORD / SEED_REVISOR_PASSWORD /');
+  console.log('      SEED_LECTOR_PASSWORD to choose them instead.');
   console.log('\n🇬🇶 Real Government Structure Loaded:');
   console.log('   ✅ All 33 official ministries from Decreto 34/2024');
   console.log('   ✅ All 24 secretaries of state from Decreto 86/2024');

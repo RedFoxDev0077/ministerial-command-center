@@ -161,8 +161,11 @@ Accounts created by `prisma/seed.ts`:
 | revisor@mttsia.gob.gq | REVISOR | Document reviewer |
 | lector@mttsia.gob.gq | LECTOR | Read-only |
 
-Passwords are set in `prisma/seed.ts` — read them there rather than from this
-file, which is committed to git.
+Passwords are **not** hard-coded. `prisma/seed.ts` generates a random 20-character
+password per account and prints each one **once** at the end of the seed run —
+capture them then. To choose them yourself, set `SEED_ADMIN_PASSWORD`,
+`SEED_GABINETE_PASSWORD`, `SEED_REVISOR_PASSWORD` and `SEED_LECTOR_PASSWORD`
+before seeding.
 
 **⚠️ Important**:
 - Change every seeded password before the system is reachable from a network.
