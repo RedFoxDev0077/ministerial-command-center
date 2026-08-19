@@ -38,6 +38,10 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-22.04
+    outputs:
+      # Consumed by the deploy job to prove the release actually reached the
+      # server. A deploy that silently does nothing otherwise looks green.
+      bundle: ${{ steps.bundle.outputs.name }}
     steps:
       - uses: actions/checkout@v4
 
@@ -85,6 +89,18 @@ jobs:
       - name: Build backend
         working-directory: backend
         run: npm run build
+
+      - name: Record built bundle name
+        id: bundle
+        run: |
+          set -euo pipefail
+          NAME=$(grep -o 'assets/index-[^"]*\.js' dist/index.html | head -1)
+          if [ -z "$NAME" ]; then
+            echo "::error::Could not determine the built bundle name from dist/index.html"
+            exit 1
+          fi
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "Built bundle: $NAME"
 
       - name: Stage deployment artifacts
         run: |
@@ -284,6 +300,38 @@ jobs:
           exit 1
           REMOTE
 
+      - name: Verify the deployed release is this build
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+          BUNDLE: ${{ needs.build.outputs.bundle }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          set -euo pipefail
+          echo "Expecting: $BUNDLE"
+
+          # 1. On disk. Catches an upload that went nowhere, or to the wrong path.
+          if ! ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" "$VPS_USER@$VPS_HOST" \
+                 "test -f /var/www/ministerial-command-center/$BUNDLE"; then
+            echo "::error::$BUNDLE is not on the server. The upload did not land."
+            exit 1
+          fi
+          echo "on-disk: ok"
+
+          # 2. As actually served. Catches nginx pointing at a different root, a
+          #    stale index.html, or a cache in front of the site.
+          if [ -n "${SITE_URL:-}" ]; then
+            SERVED=$(curl -fsS --max-time 30 "$SITE_URL/" | grep -o 'assets/index-[^"]*\.js' | head -1 || true)
+            if [ "$SERVED" != "$BUNDLE" ]; then
+              echo "::error::$SITE_URL serves '$SERVED' but this build produced '$BUNDLE'."
+              exit 1
+            fi
+            echo "served:  ok ($SITE_URL)"
+          else
+            echo "::warning::SITE_URL variable not set — skipped the end-to-end served check."
+          fi
+
       - name: Roll back on failed health check
         if: failure() && steps.health.outcome == 'failure'
         env:
@@ -315,6 +363,7 @@ jobs:
           # injection vector.
           STATUS: ${{ job.status }}
           COMMIT_SHA: ${{ github.sha }}
+          BUNDLE: ${{ needs.build.outputs.bundle }}
           COMMIT_MSG: ${{ github.event.head_commit.message }}
           ACTOR: ${{ github.actor }}
           SCHEMA_PUSH: ${{ inputs.apply_schema_push || false }}
@@ -335,6 +384,7 @@ jobs:
             echo "|---|---|"
             echo "| Status | $RESULT |"
             echo "| Commit | \`$COMMIT_SHA\` |"
+            echo "| Verified bundle | \`$BUNDLE\` |"
             echo "| Message | $MSG |"
             echo "| Author | $ACTOR |"
             echo "| Schema push | $SCHEMA_PUSH |"

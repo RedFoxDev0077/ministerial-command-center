@@ -69,6 +69,18 @@ contact — a small but real MITM window. Setting it closes that.
 | Variable | Default | Purpose |
 |---|---|---|
 | `VITE_API_URL` | `/api` | Frontend API base. The default is correct — nginx proxies `/api` to `localhost:3000`. Only change it if the API moves to another host. |
+| `SITE_URL` | *(unset)* | Public URL, e.g. `https://hoclaespa.com`. Used by the post-deploy check that confirms the site actually serves the bundle this run built. Strongly recommended: without it that end-to-end check is skipped and a silent non-deploy can still look green. |
+
+### Deploy verification
+
+After the health check, the pipeline asserts the release really landed:
+
+1. the built bundle exists on the server, and
+2. `SITE_URL` serves an `index.html` referencing that exact bundle.
+
+Either mismatch fails the run. This exists because a deploy once stopped running
+entirely while every push still reported success — fixes sat in git for hours
+while production served an old build.
 
 ---
 

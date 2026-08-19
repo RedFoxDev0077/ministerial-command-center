@@ -30,6 +30,11 @@ export default defineConfig(() => ({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: false,
+    // Radix + userEvent in jsdom is slow (a single Select interaction can take
+    // ~2s locally). CI runners are slower still, and a timeout flake here would
+    // block a deploy for no reason.
+    testTimeout: 20000,
+    hookTimeout: 20000,
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
     coverage: {
       provider: 'v8',

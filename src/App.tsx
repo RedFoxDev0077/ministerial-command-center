@@ -9,6 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { VirtualAssistant } from "@/components/ui/virtual-assistant";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
@@ -56,6 +57,9 @@ const DocumentsRedirect = () => {
 };
 
 const App = () => (
+  // Outermost, so a crash anywhere below renders a message instead of a blank
+  // page. Providers sit inside it and are covered too.
+  <ErrorBoundary>
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
       <TooltipProvider>
@@ -115,6 +119,7 @@ const App = () => (
       </TooltipProvider>
     </LanguageProvider>
   </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;
