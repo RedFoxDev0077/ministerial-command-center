@@ -28,6 +28,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
+// Radix throws on <SelectItem value="">; the empty string is reserved for
+// clearing the selection. Use a sentinel and map it back to '' on change.
+const NONE_VALUE = '__none__';
+
 interface CreateFromTemplateDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -198,12 +202,15 @@ export function CreateFromTemplateDialog({
 
                   <div className="space-y-2">
                     <Label>Entidad (opcional)</Label>
-                    <Select value={entityId} onValueChange={setEntityId}>
+                    <Select
+                      value={entityId || NONE_VALUE}
+                      onValueChange={(v) => setEntityId(v === NONE_VALUE ? '' : v)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Ninguna" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Ninguna</SelectItem>
+                        <SelectItem value={NONE_VALUE}>Ninguna</SelectItem>
                         {entities.map((entity: any) => (
                           <SelectItem key={entity.id} value={entity.id}>
                             {entity.name}
@@ -215,12 +222,15 @@ export function CreateFromTemplateDialog({
 
                   <div className="space-y-2">
                     <Label>Responsable (opcional)</Label>
-                    <Select value={responsibleId} onValueChange={setResponsibleId}>
+                    <Select
+                      value={responsibleId || NONE_VALUE}
+                      onValueChange={(v) => setResponsibleId(v === NONE_VALUE ? '' : v)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Ninguno" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Ninguno</SelectItem>
+                        <SelectItem value={NONE_VALUE}>Ninguno</SelectItem>
                         {users.map((user: any) => (
                           <SelectItem key={user.id} value={user.id}>
                             {user.firstName} {user.lastName}

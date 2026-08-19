@@ -12,7 +12,9 @@ import { toast } from '@/components/ui/sonner';
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -359,9 +361,15 @@ export default function Register() {
                         </SelectItem>
                       ))
                     ) : (
-                      <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                        No hay departamentos disponibles
-                      </div>
+                      // Must be a Select primitive. A raw element here is not
+                      // registered in Radix's item collection, so when the
+                      // popover unmounts React tries to removeChild a node that
+                      // is no longer its child -> NotFoundError.
+                      <SelectGroup>
+                        <SelectLabel className="font-normal text-muted-foreground">
+                          No hay departamentos disponibles
+                        </SelectLabel>
+                      </SelectGroup>
                     )}
                   </SelectContent>
                 </Select>

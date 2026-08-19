@@ -19,7 +19,9 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -419,9 +421,12 @@ export default function CaseDetail() {
                 </SelectTrigger>
                 <SelectContent className="max-h-[300px]">
                   {filteredDocs.length === 0 ? (
-                    <div className="p-4 text-center text-sm text-muted-foreground">
-                      No hay documentos disponibles
-                    </div>
+                    // Select primitive, not a raw <div> — see Register.tsx.
+                    <SelectGroup>
+                      <SelectLabel className="font-normal text-muted-foreground">
+                        No hay documentos disponibles
+                      </SelectLabel>
+                    </SelectGroup>
                   ) : (
                     filteredDocs.map((doc: any) => (
                       <SelectItem key={doc.id} value={doc.id}>
