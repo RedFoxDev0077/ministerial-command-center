@@ -32,7 +32,7 @@ import {
   CheckCircle2,
   UserPlus,
 } from 'lucide-react';
-import { API_BASE_URL } from '@/lib/api/config';
+import { API_BASE_URL, IS_FILE_PROTOCOL } from '@/lib/api/config';
 
 const registerSchema = z.object({
   firstName: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
@@ -62,6 +62,10 @@ export default function Register() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loadingDepartments, setLoadingDepartments] = useState(true);
+  // Distinguishes 'the request failed' from 'the ministry has no departments'.
+  // Both previously rendered the same empty dropdown, which made a failed
+  // fetch look like an empty database.
+  const [departmentsError, setDepartmentsError] = useState<string | null>(null);
 
   const {
     register,
@@ -76,22 +80,33 @@ export default function Register() {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const API_URL = API_BASE_URL;
-        const response = await fetch(`${API_URL}/departments`);
+        setDepartmentsError(null);
+
+        if (IS_FILE_PROTOCOL) {
+          // Opened from disk: a relative /api resolves against the filesystem and
+          // every request fails. Say so plainly instead of showing an empty list.
+          throw new Error(
+            'La página se abrió como archivo local (file://). Ábrala desde la dirección del sitio.',
+          );
+        }
+
+        const response = await fetch(`${API_BASE_URL}/departments`);
 
         if (response.ok) {
           const data = await response.json();
-          setDepartments(data);
+          setDepartments(Array.isArray(data) ? data : []);
         } else {
+          const msg = `El servidor respondió ${response.status}.`;
+          setDepartmentsError(msg);
           toast.error('Error al cargar departamentos', {
-            description: 'No se pudieron cargar los departamentos. Por favor, recarga la página.',
+            description: `${msg} Por favor, recarga la página.`,
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching departments:', error);
-        toast.error('Error de conexión', {
-          description: 'No se pudo conectar con el servidor.',
-        });
+        const msg = error?.message || 'No se pudo conectar con el servidor.';
+        setDepartmentsError(msg);
+        toast.error('Error de conexión', { description: msg });
       } finally {
         setLoadingDepartments(false);
       }
@@ -368,7 +383,9 @@ export default function Register() {
                       // is no longer its child -> NotFoundError.
                       <SelectGroup>
                         <SelectLabel className="font-normal text-muted-foreground">
-                          No hay departamentos disponibles
+                          {departmentsError
+                            ? `No se pudieron cargar: ${departmentsError}`
+                            : 'No hay departamentos disponibles'}
                         </SelectLabel>
                       </SelectGroup>
                     )}
