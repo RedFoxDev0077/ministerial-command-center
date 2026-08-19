@@ -27,7 +27,9 @@ class WebSocketClient {
     }
 
     // Get base URL from VITE_API_URL, removing /api suffix if present
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+    const apiUrl = import.meta.env.VITE_API_URL || '/api';
+    // With the relative default this becomes '', so socket.io connects to the
+    // '/notifications' namespace on the current origin — correct behind nginx.
     const wsUrl = apiUrl.replace(/\/api$/, '');
 
     console.log('[WebSocket] Connecting to:', `${wsUrl}/notifications`);

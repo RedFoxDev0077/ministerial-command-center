@@ -28,7 +28,7 @@ export class EmailService {
       this.configService.get<string>('FROM_NAME') ||
       'Centro de Comando Ministerial';
     this.appUrl =
-      this.configService.get<string>('APP_URL') || 'http://72.61.41.94';
+      this.configService.get<string>('APP_URL') || 'http://localhost:8080';
 
     this.initTransporter();
   }

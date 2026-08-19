@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 // Get API base URL from environment or use default
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+// Default to a same-origin relative path so the built bundle works on any
+// host (domain, IP, staging) without rebuilding. Vite proxies /api to the
+// backend in dev (see vite.config.ts); nginx proxies it in production.
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Create axios instance with default config
 export const axiosInstance = axios.create({

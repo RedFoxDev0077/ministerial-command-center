@@ -67,7 +67,7 @@ export const multimediaApi = {
   },
   getFrameUrl: (id: string, filename: string) => {
     // Nginx serves /uploads/* statically — no auth token needed for <img> tags
-    const apiBase = axiosInstance.defaults.baseURL || 'http://localhost:3000/api';
+    const apiBase = axiosInstance.defaults.baseURL || '/api';
     const serverBase = apiBase.replace(/\/api$/, '');
     return `${serverBase}/uploads/multimedia/frames/${id}/${filename}`;
   },

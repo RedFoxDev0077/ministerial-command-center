@@ -11,7 +11,10 @@ export class QrService {
     // Use frontend URL or fallback to backend URL
     this.baseUrl = this.configService.get<string>(
       'FRONTEND_URL',
-      this.configService.get<string>('APP_URL', 'http://157.230.178.118'),
+      // Fallback is localhost, never a hard-coded server address: this URL is
+      // printed into QR codes on official documents, so a stale IP here sends
+      // scanners to whatever now answers on that address.
+      this.configService.get<string>('APP_URL', 'http://localhost:8080'),
     );
   }
 

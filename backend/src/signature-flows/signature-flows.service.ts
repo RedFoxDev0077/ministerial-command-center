@@ -96,7 +96,7 @@ export class SignatureFlowsService {
 
           // Send email notification
           if (dto.notificationMethod === 'EMAIL' || dto.notificationMethod === 'BOTH') {
-            const appUrl = this.configService.get<string>('APP_URL') || 'http://72.61.41.94';
+            const appUrl = this.configService.get<string>('APP_URL') || 'http://localhost:8080';
             await this.emailService.sendSignatureRequiredEmail({
               to: participant.user.email,
               userName: `${participant.user.firstName} ${participant.user.lastName}`,

@@ -73,7 +73,7 @@ export default function Register() {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+        const API_URL = import.meta.env.VITE_API_URL || '/api';
         const response = await fetch(`${API_URL}/departments`);
 
         if (response.ok) {
@@ -101,7 +101,7 @@ export default function Register() {
     try {
       setError(null);
 
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const API_URL = import.meta.env.VITE_API_URL || '/api';
 
       const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',

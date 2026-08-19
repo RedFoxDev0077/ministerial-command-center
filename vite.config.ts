@@ -7,6 +7,11 @@ export default defineConfig(() => ({
   server: {
     host: "::",
     port: 8080,
+    // The app calls a relative /api, so dev needs a proxy to the local backend.
+    proxy: {
+      "/api": { target: "http://localhost:3000", changeOrigin: true },
+      "/socket.io": { target: "http://localhost:3000", ws: true, changeOrigin: true },
+    },
   },
   plugins: [react()],
   resolve: {
