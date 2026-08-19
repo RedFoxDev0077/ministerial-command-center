@@ -116,7 +116,8 @@ npx prisma db push
 # Required: `search_vector` is a tsvector, which Prisma cannot represent, so it
 # is NOT created by `db push`. Without it document search silently degrades to a
 # slower substring match.
-psql "$DATABASE_URL" -f prisma/sql/001_document_search_vector.sql
+# Note: strip Prisma's `?schema=` parameter — libpq rejects it.
+psql "${DATABASE_URL%%\?*}" -f prisma/sql/001_document_search_vector.sql
 
 # Seed initial data (optional)
 npx prisma db seed

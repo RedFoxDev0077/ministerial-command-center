@@ -238,7 +238,9 @@ jobs:
           if [ "$APPLY_SEARCH" = "true" ]; then
             echo "--- applying full-text search migration ---"
             set -a; . ./.env; set +a
-            psql "$DATABASE_URL" -f prisma/sql/001_document_search_vector.sql
+            # DATABASE_URL carries Prisma's `?schema=public`, which libpq rejects
+            # with `invalid URI query parameter: "schema"`. Strip the query string.
+            psql "${DATABASE_URL%%\?*}" -f prisma/sql/001_document_search_vector.sql
           fi
 
           echo "--- restarting API ---"
