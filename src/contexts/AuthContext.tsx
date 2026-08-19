@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '@/lib/api/config';
 
 interface User {
   id: string;
@@ -29,7 +30,7 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const API_URL = API_BASE_URL;
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);

@@ -4,6 +4,7 @@ import { Button } from '../ui/button';
 import { documentsApi } from '../../lib/api/documents.api';
 import { toast } from 'sonner';
 import { FileText, Loader2, Download, CheckCircle2 } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api/config';
 
 interface FileConversionDialogProps {
   open: boolean;
@@ -66,7 +67,7 @@ export function FileConversionDialog({
     if (!convertedFileId) return;
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || '/api';
+      const API_URL = API_BASE_URL;
       const response = await fetch(`${API_URL}/documents/files/${convertedFileId}/download`);
 
       if (!response.ok) {

@@ -19,6 +19,7 @@ import {
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
+import { API_BASE_URL } from '@/lib/api/config';
 
 interface Document {
   id: string;
@@ -76,7 +77,7 @@ export default function PublicDocumentView() {
       }
 
       try {
-        const API_URL = import.meta.env.VITE_API_URL || '/api';
+        const API_URL = API_BASE_URL;
         const response = await fetch(`${API_URL}/documents/public/${id}`);
 
         if (!response.ok) {
@@ -106,7 +107,7 @@ export default function PublicDocumentView() {
 
   const handleViewFile = useCallback(async (fileId: string) => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || '/api';
+      const API_URL = API_BASE_URL;
       const response = await fetch(`${API_URL}/documents/files/${fileId}/download`);
 
       if (!response.ok) {

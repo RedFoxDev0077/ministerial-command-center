@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { WS_BASE_URL } from './api/config';
 
 export interface WebSocketNotification {
   type: 'DOCUMENT_DECREED' | 'DOCUMENT_ASSIGNED' | 'STATUS_CHANGED' | 'COMMENT_ADDED' | 'SIGNATURE_REQUIRED' | 'DEADLINE_REMINDER';
@@ -27,10 +28,9 @@ class WebSocketClient {
     }
 
     // Get base URL from VITE_API_URL, removing /api suffix if present
-    const apiUrl = import.meta.env.VITE_API_URL || '/api';
-    // With the relative default this becomes '', so socket.io connects to the
-    // '/notifications' namespace on the current origin — correct behind nginx.
-    const wsUrl = apiUrl.replace(/\/api$/, '');
+    // '' when the base is relative, so socket.io uses the '/notifications'
+    // namespace on the current origin — correct behind nginx.
+    const wsUrl = WS_BASE_URL;
 
     console.log('[WebSocket] Connecting to:', `${wsUrl}/notifications`);
 

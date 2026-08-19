@@ -32,6 +32,7 @@ import {
   CheckCircle2,
   UserPlus,
 } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api/config';
 
 const registerSchema = z.object({
   firstName: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
@@ -75,7 +76,7 @@ export default function Register() {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const API_URL = import.meta.env.VITE_API_URL || '/api';
+        const API_URL = API_BASE_URL;
         const response = await fetch(`${API_URL}/departments`);
 
         if (response.ok) {
@@ -103,7 +104,7 @@ export default function Register() {
     try {
       setError(null);
 
-      const API_URL = import.meta.env.VITE_API_URL || '/api';
+      const API_URL = API_BASE_URL;
 
       const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
