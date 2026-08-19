@@ -59,6 +59,12 @@ jobs:
         # without checking them, so nothing else would catch a regression.
         run: npx tsc --noEmit -p tsconfig.app.json
 
+      - name: Test frontend
+        # Covers the Radix Select misuses that crashed the signup page, and the
+        # API base URL resolution that once shipped pointing at localhost.
+        # Neither is catchable by typecheck or build.
+        run: npm test
+
       - name: Build frontend
         run: npm run build
 
@@ -106,6 +112,7 @@ jobs:
             echo "| Check | Result |"
             echo "|---|---|"
             echo "| Frontend typecheck | ✅ passed |"
+            echo "| Frontend tests | ✅ passed |"
             echo "| Frontend build | ✅ passed |"
             echo "| Backend typecheck | ✅ passed |"
             echo "| Backend build | ✅ passed |"
