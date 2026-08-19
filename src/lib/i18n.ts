@@ -21,7 +21,6 @@ export const translations: Record<Locale, Record<string, string>> = {
     'nav.multimedia': 'Multimedia',
     'nav.firma': 'Firma electrónica',
     'nav.archivo': 'Archivo institucional',
-    'nav.multimedia': 'Multimedia',
     'nav.agenda': 'Agenda',
     'nav.whatsapp': 'Bot WhatsApp',
     'nav.contenidos': 'Contenidos',

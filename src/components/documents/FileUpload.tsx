@@ -26,7 +26,7 @@ import { FileConversionDialog } from './FileConversionDialog';
 import { FileVersionHistory } from './FileVersionHistory';
 import { FileReplaceDialog } from './FileReplaceDialog';
 
-interface UploadedFile {
+export interface UploadedFile {
   id: string;
   name: string;
   size: number;
@@ -35,24 +35,32 @@ interface UploadedFile {
   file?: File;
   progress?: number;
   extractedText?: string;
+  /** Server-side filename, present on files already persisted to a document. */
+  fileName?: string;
 }
 
 interface FileUploadProps {
   documentId?: string;
   existingFiles?: UploadedFile[];
+  /** Alias for `existingFiles`, used by the document forms. */
+  files?: UploadedFile[];
   onFilesChange?: (files: UploadedFile[]) => void;
   onTextExtracted?: (text: string) => void;
   maxSize?: number; // in MB
+  /** Maximum number of attachments. */
+  maxFiles?: number;
   acceptedTypes?: string[];
   uploadImmediately?: boolean; // If true, uploads to backend when documentId is provided
 }
 
 export function FileUpload({
   documentId,
-  existingFiles = [],
+  existingFiles,
+  files: filesProp,
   onFilesChange,
   onTextExtracted,
   maxSize = 10,
+  maxFiles = 10,
   acceptedTypes = [
     'application/pdf',
     'application/msword',
@@ -66,7 +74,7 @@ export function FileUpload({
   ],
   uploadImmediately = false,
 }: FileUploadProps) {
-  const [files, setFiles] = useState<UploadedFile[]>(existingFiles);
+  const [files, setFiles] = useState<UploadedFile[]>(existingFiles ?? filesProp ?? []);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -128,6 +136,11 @@ export function FileUpload({
     });
 
     if (validFiles.length === 0) return;
+
+    if (files.length + validFileObjs.length > maxFiles) {
+      toast.error(`Máximo ${maxFiles} archivos por documento`);
+      return;
+    }
 
     // Add files to state immediately with 0% progress
     const updatedFiles = [...files, ...validFileObjs];

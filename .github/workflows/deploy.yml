@@ -53,15 +53,11 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Typecheck frontend (informational)
-        id: fe_types
-        continue-on-error: true
-        run: |
-          # The frontend has pre-existing type errors and `strict` is off, so this
-          # reports but does not block. Vite builds regardless (esbuild strips
-          # types without checking them).
-          npx tsc --noEmit -p tsconfig.app.json 2>&1 | tee fe-types.log || true
-          echo "count=$(grep -c 'error TS' fe-types.log || echo 0)" >> "$GITHUB_OUTPUT"
+      - name: Typecheck frontend
+        # The frontend is type-clean as of the "fix all 47 frontend type errors"
+        # commit. This blocks, so it stays that way — vite/esbuild strips types
+        # without checking them, so nothing else would catch a regression.
+        run: npx tsc --noEmit -p tsconfig.app.json
 
       - name: Build frontend
         run: npm run build
@@ -109,10 +105,10 @@ jobs:
             echo ""
             echo "| Check | Result |"
             echo "|---|---|"
+            echo "| Frontend typecheck | ✅ passed |"
             echo "| Frontend build | ✅ passed |"
             echo "| Backend typecheck | ✅ passed |"
             echo "| Backend build | ✅ passed |"
-            echo "| Frontend typecheck | ⚠️ ${{ steps.fe_types.outputs.count }} pre-existing errors (non-blocking) |"
           } >> "$GITHUB_STEP_SUMMARY"
 
   deploy:

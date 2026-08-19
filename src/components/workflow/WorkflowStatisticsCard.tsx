@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 
 interface WorkflowStatisticsCardProps {
   className?: string;
+  style?: React.CSSProperties;
 }
 
 interface StageStats {
@@ -26,7 +27,7 @@ interface StageStats {
   percentage: number;
 }
 
-export function WorkflowStatisticsCard({ className }: WorkflowStatisticsCardProps) {
+export function WorkflowStatisticsCard({ className, style }: WorkflowStatisticsCardProps) {
   const { data: stats, isLoading } = useQuery({
     queryKey: ['workflow-stats'],
     queryFn: () => documentsApi.getWorkflowStats(),
@@ -63,7 +64,7 @@ export function WorkflowStatisticsCard({ className }: WorkflowStatisticsCardProp
 
   if (isLoading) {
     return (
-      <Card className={className}>
+      <Card className={className} style={style}>
         <CardHeader>
           <CardTitle>Estadísticas de Flujo de Trabajo</CardTitle>
         </CardHeader>
@@ -85,7 +86,7 @@ export function WorkflowStatisticsCard({ className }: WorkflowStatisticsCardProp
     .slice(0, 5);
 
   return (
-    <Card className={className}>
+    <Card className={className} style={style}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Estadísticas de Flujo de Trabajo</span>

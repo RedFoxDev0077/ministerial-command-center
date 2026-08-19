@@ -27,6 +27,8 @@ export interface Article {
 
 // Transient proposal — never saved to DB
 export interface ArticleProposal {
+  /** Present on proposals persisted as articles; absent on freshly generated ones. */
+  id?: string;
   title: string;
   introduction: string;
   outline: string[];
@@ -41,7 +43,9 @@ export interface CreateArticleDto {
   status?: 'DRAFT' | 'PENDING';
 }
 
-export interface UpdateArticleDto extends Partial<CreateArticleDto> {
+// `status` is widened on update (an article can be published), so it is omitted
+// from the inherited shape rather than narrowed against it.
+export interface UpdateArticleDto extends Omit<Partial<CreateArticleDto>, 'status'> {
   status?: 'DRAFT' | 'PENDING' | 'PUBLISHED';
 }
 

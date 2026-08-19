@@ -13,7 +13,9 @@ export interface Department {
   createdAt: string;
   updatedAt: string;
   parent?: Department;
-  children?: DepartmentNode[];
+  // GET /departments/hierarchy returns full Department records nested under
+  // `children`, not the reduced DepartmentNode shape.
+  children?: Department[];
   _count?: {
     users: number;
   };

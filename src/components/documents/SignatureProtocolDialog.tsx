@@ -283,7 +283,11 @@ export function SignatureProtocolDialog({
           </AlertDescription>
         </Alert>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(value as typeof activeTab)}
+          className="w-full"
+        >
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="signature" disabled={isSigned}>
               {isSigned ? '✓ Firmado' : '1. Firma'}

@@ -32,14 +32,17 @@ export interface QueryAuditLogDto {
   dateTo?: string;
 }
 
+// Matches the flat shape returned by createPaginatedResponse() on the backend
+// (backend/src/documents/utils/pagination.util.ts) — the fields are top-level,
+// not nested under `meta`.
 export interface PaginatedAuditResponse {
   data: AuditLog[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
 }
 
 export interface AuditStats {

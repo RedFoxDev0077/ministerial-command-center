@@ -27,12 +27,14 @@ import {
   Loader2,
   List,
   PenLine,
+  Building2,
+  MessageCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { axiosInstance } from '@/lib/api/axios';
-import { departmentsApi } from '@/lib/api/departments.api';
+import { departmentsApi, type Department } from '@/lib/api/departments.api';
 import { useNavigate } from 'react-router-dom';
 
 function getDeptColor(level: number): string {

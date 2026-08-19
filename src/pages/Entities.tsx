@@ -153,6 +153,7 @@ export default function EntitiesPage() {
       [EntityType.PRIVATE_COMPANY]: 'bg-purple-500',
       [EntityType.INTERNAL_DEPARTMENT]: 'bg-orange-500',
       [EntityType.INTERNATIONAL_ORG]: 'bg-cyan-500',
+      [EntityType.EMBASSY]: 'bg-indigo-500',
       [EntityType.CITIZEN]: 'bg-gray-500',
       [EntityType.OTHER]: 'bg-slate-500',
     };

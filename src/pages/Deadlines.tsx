@@ -32,7 +32,9 @@ export default function DeadlinesPage() {
   // Fetch deadlines from API
   const { data: deadlines = [], isLoading: loading } = useQuery({
     queryKey: ['deadlines'],
-    queryFn: getDeadlines,
+    // Wrapped: React Query calls queryFn with a context object, which would be
+    // passed straight into getDeadlines' `params` argument.
+    queryFn: () => getDeadlines(),
   });
 
   // Helper function to determine deadline display status

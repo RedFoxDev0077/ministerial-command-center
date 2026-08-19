@@ -14,7 +14,9 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+// NOTE: `Label` is defined locally at the bottom of this file (a plain <div>),
+// which is what these usages render today. Importing the shadcn Label here
+// collides with it.
 import {
   DropdownMenu,
   DropdownMenuContent,

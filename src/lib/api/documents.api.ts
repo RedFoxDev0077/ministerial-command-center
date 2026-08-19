@@ -1,5 +1,20 @@
 import { axiosInstance } from './axios';
 
+/** Mirrors backend ConversionFormat (backend/src/files/dto/convert-file.dto.ts). */
+export type ConversionFormat = 'pdf' | 'docx' | 'xlsx';
+
+export interface ConversionFormatsResponse {
+  supportedFormats: ConversionFormat[];
+}
+
+export interface ConversionResult {
+  success: boolean;
+  fileId: string;
+  convertedFileId?: string;
+  error?: string;
+  duration?: number;
+}
+
 export interface CreateDocumentDto {
   title: string;
   type: string;
@@ -54,10 +69,14 @@ export interface QueryDocumentDto {
   createdById?: string;
 }
 
+// Mirrors backend/src/documents/dto/decree-document.dto.ts, where every field is
+// @IsOptional(). A decree can route internally (departmentIds), externally
+// (externalEmail), or just record the Minister's note.
 export interface DecreeDocumentDto {
-  departmentIds: string[];
-  sendNotification: boolean;
-  notificationMethod: 'EMAIL' | 'WHATSAPP' | 'BOTH';
+  departmentIds?: string[];
+  externalEmail?: string;
+  sendNotification?: boolean;
+  notificationMethod?: 'EMAIL' | 'WHATSAPP' | 'BOTH';
   message?: string;
   decreeNote?: string;
 }
@@ -553,6 +572,23 @@ export const documentsApi = {
   // Security: Review and approve/reject a flagged file
   reviewFileSecurity: async (fileId: string, approved: boolean) => {
     const response = await axiosInstance.post(`/files/${fileId}/security/review`, { approved });
+    return response.data;
+  },
+
+  // File conversion: list the formats a given file can be converted to.
+  // Backend: GET /files/:id/conversions
+  getConversionFormats: async (fileId: string): Promise<ConversionFormatsResponse> => {
+    const response = await axiosInstance.get(`/files/${fileId}/conversions`);
+    return response.data;
+  },
+
+  // File conversion: convert a file to a target format.
+  // Backend: POST /files/:id/convert
+  convertFile: async (
+    fileId: string,
+    targetFormat: ConversionFormat,
+  ): Promise<ConversionResult> => {
+    const response = await axiosInstance.post(`/files/${fileId}/convert`, { targetFormat });
     return response.data;
   },
 };

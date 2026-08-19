@@ -9,3 +9,5 @@ export type * from './documents.api';
 export type * from './auth.api';
 export type * from './notifications.api';
 export type * from './audit.api';
+export type * from './departments.api';
+export type * from './entities.api';

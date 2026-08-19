@@ -167,7 +167,7 @@ export default function InboxPage() {
     entityId: entityFilter !== 'all' ? entityFilter : undefined,
     status: statusFilter !== 'all' ? statusFilter : undefined,
     priority: priorityFilter !== 'all' ? priorityFilter : undefined,
-    classification: classificationFilter !== 'all' ? classificationFilter : undefined,
+    classification: classificationFilter !== 'all' ? (classificationFilter as 'INTERNAL' | 'EXTERNAL') : undefined,
   }), [currentPage, pageSize, debouncedSearch, entityFilter, statusFilter, priorityFilter, classificationFilter]);
 
   // Reset to first page when filters change
