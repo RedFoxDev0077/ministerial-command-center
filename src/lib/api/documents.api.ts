@@ -380,7 +380,9 @@ export const documentsApi = {
     formData.append('entryDate', data.entryDate.toISOString());
     formData.append('entryTime', data.entryTime);
     if (data.stampImage) {
-      formData.append('stampImage', data.stampImage);
+      // Field name must match FilesInterceptor('files', 1) on the backend.
+      // Any other name makes Multer reject the request with "Unexpected field".
+      formData.append('files', data.stampImage);
     }
     if (data.notes) {
       formData.append('notes', data.notes);

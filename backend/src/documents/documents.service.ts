@@ -268,6 +268,8 @@ export class DocumentsService {
     // Status filter
     if (filters.status) {
       where.status = filters.status as any;
+    } else if ((filters as any).excludeArchived) {
+      where.status = { not: 'ARCHIVED' } as any;
     }
 
     // Classification filter
@@ -890,14 +892,25 @@ export class DocumentsService {
    * Get inbox documents (direction = IN)
    */
   async getInbox(queryDto: QueryDocumentDto): Promise<PaginatedResponseDto<any>> {
-    return this.findAll({ ...queryDto, direction: 'IN' as any });
+    // Archiving only sets status = ARCHIVED, so without this the document stays
+    // in the inbox as well as the archive. An explicit status filter still wins,
+    // so a user can deliberately list archived documents here.
+    return this.findAll({
+      ...queryDto,
+      direction: 'IN' as any,
+      excludeArchived: !queryDto.status,
+    } as any);
   }
 
   /**
    * Get outbox documents (direction = OUT)
    */
   async getOutbox(queryDto: QueryDocumentDto): Promise<PaginatedResponseDto<any>> {
-    return this.findAll({ ...queryDto, direction: 'OUT' as any });
+    return this.findAll({
+      ...queryDto,
+      direction: 'OUT' as any,
+      excludeArchived: !queryDto.status,
+    } as any);
   }
 
   /**
