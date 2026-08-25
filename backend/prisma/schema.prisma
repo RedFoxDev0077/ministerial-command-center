@@ -234,6 +234,13 @@ model Document {
   createdAt           DateTime    @default(now())
   updatedAt           DateTime    @updatedAt
 
+  // NOTE: the `search_vector` tsvector column also exists on this table. It is a
+  // PostgreSQL GENERATED column created by prisma/sql/001_document_search_vector.sql
+  // and is deliberately NOT declared here: Prisma can neither create nor alter a
+  // generated column. Consequence: `prisma db push` reports it as an unknown
+  // column and offers to DROP it. Never run db push with --accept-data-loss on a
+  // populated database — apply schema changes with prisma/sql/*.sql instead.
+
   // Relations
   files               DocumentFile[]
   tags                DocumentTag[]
@@ -1039,6 +1046,10 @@ model MediaTranscription {
   socialPost       String?  @db.Text
   bestFrames       Json?
   framesStatus     String?
+
+  // Press office outputs: a formal nota de prensa plus headline options
+  pressRelease     String?  @db.Text
+  headlines        String[] @default([])
 
   createdById      String
   createdBy        User     @relation("mediaCreator", fields: [createdById], references: [id])

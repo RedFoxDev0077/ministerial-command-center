@@ -32,6 +32,7 @@ import {
   Camera,
   Download,
   ImageIcon,
+  Newspaper,
 } from 'lucide-react';
 import { multimediaApi, type MediaTranscription } from '@/lib/api/multimedia.api';
 import { copyToClipboard } from '@/lib/clipboard';
@@ -130,6 +131,16 @@ export default function MultimediaPage() {
       toast.success('Post para redes sociales generado');
     },
     onError: () => toast.error('Error al generar post'),
+  });
+
+  const pressReleaseMutation = useMutation({
+    mutationFn: (id: string) => multimediaApi.generatePressRelease(id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['multimedia'] });
+      setSelectedItem(data);
+      toast.success('Nota de prensa generada');
+    },
+    onError: () => toast.error('Error al generar la nota de prensa'),
   });
 
   const translateMutation = useMutation({
@@ -404,6 +415,83 @@ export default function MultimediaPage() {
                       <Share2 className="h-4 w-4 mr-2" />
                     )}
                     {item.socialPost ? 'Regenerar Post' : 'Generar Post para Redes'}
+                  </Button>
+                )}
+
+                {/* Press release + headlines */}
+                {(item.pressRelease || (item.headlines && item.headlines.length > 0)) && (
+                  <div className="space-y-2">
+                    {item.headlines && item.headlines.length > 0 && (
+                      <div className="space-y-1">
+                        <span className="text-xs font-medium flex items-center gap-1">
+                          <Newspaper className="h-3.5 w-3.5 text-amber-700" />
+                          Titulares propuestos
+                        </span>
+                        <ul className="bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-1.5">
+                          {item.headlines.map((h, i) => (
+                            <li key={i} className="flex items-start justify-between gap-2 text-sm">
+                              <span>{h}</span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 px-2 text-xs shrink-0"
+                                onClick={() => {
+                                  copyToClipboard(h)
+                                    .then(() => toast.success('Titular copiado'))
+                                    .catch(() => toast.error('Error al copiar'));
+                                }}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {item.pressRelease && (
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-medium flex items-center gap-1">
+                            <Newspaper className="h-3.5 w-3.5 text-amber-700" />
+                            Nota de prensa
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-xs"
+                            onClick={() => {
+                              copyToClipboard(item.pressRelease!)
+                                .then(() => toast.success('Nota de prensa copiada'))
+                                .catch(() => toast.error('Error al copiar'));
+                            }}
+                          >
+                            <Copy className="h-3 w-3 mr-1" />
+                            Copiar
+                          </Button>
+                        </div>
+                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                          <AiText text={item.pressRelease} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {item.status === 'COMPLETED' && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full border-amber-200 text-amber-800 hover:bg-amber-50"
+                    onClick={() => pressReleaseMutation.mutate(item.id)}
+                    disabled={pressReleaseMutation.isPending}
+                  >
+                    {pressReleaseMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : (
+                      <Newspaper className="h-4 w-4 mr-2" />
+                    )}
+                    {item.pressRelease ? 'Regenerar Nota de Prensa' : 'Generar Nota de Prensa y Titulares'}
                   </Button>
                 )}
 

@@ -22,6 +22,8 @@ export interface MediaTranscription {
   socialPost?: string | null;
   bestFrames?: BestFrame[] | null;
   framesStatus?: string | null;
+  pressRelease?: string | null;
+  headlines?: string[] | null;
   createdBy: { id: string; firstName: string; lastName: string; email: string };
   createdAt: string;
   updatedAt: string;
@@ -59,6 +61,23 @@ export const multimediaApi = {
   },
   generateTechnicalOpinion: async (id: string) => {
     const response = await axiosInstance.post(`/multimedia/${id}/technical-opinion`, {}, { timeout: 120000 });
+    return response.data as MediaTranscription;
+  },
+  // Press office: formal nota de prensa + headline options, in one call so the
+  // headlines match the body.
+  generatePressRelease: async (id: string) => {
+    const response = await axiosInstance.post(`/multimedia/${id}/press-release`, {}, { timeout: 180000 });
+    return response.data as MediaTranscription;
+  },
+  // Upload a batch of photographs and let the AI pick the best for publication.
+  selectBestPhotos: async (files: File[]) => {
+    const formData = new FormData();
+    // Field name must match FilesInterceptor('files', 30) on the backend.
+    files.forEach((f) => formData.append('files', f));
+    const response = await axiosInstance.post('/multimedia/photos/select-best', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 300000,
+    });
     return response.data as MediaTranscription;
   },
   extractFrames: async (id: string) => {

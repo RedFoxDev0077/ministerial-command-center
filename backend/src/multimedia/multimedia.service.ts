@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import OpenAI from 'openai';
@@ -198,6 +198,129 @@ export class MultimediaService {
     });
   }
 
+  /**
+   * Press office output: a formal nota de prensa plus headline options.
+   *
+   * Separate from generateSocialPost — a press release and a Facebook post are
+   * different genres. The Minister's office asked for both, so both exist.
+   * One call returns both so the headlines match the body.
+   */
+  async generatePressRelease(id: string) {
+    const record = await this.findOne(id);
+    if (!record.transcription) throw new NotFoundException('No hay transcripción disponible');
+
+    const response = await this.openai.chat.completions.create({
+      model: this.configService.get<string>('OPENAI_MODEL') || 'gpt-4o',
+      response_format: { type: 'json_object' },
+      messages: [
+        {
+          role: 'system',
+          content:
+            'Eres el jefe de prensa del Ministerio de Transportes, Telecomunicaciones y Sistemas de ' +
+            'Inteligencia Artificial de Guinea Ecuatorial. A partir de la transcripción de un acto ' +
+            'oficial, redacta material de prensa listo para publicar.\n\n' +
+            'Devuelve EXCLUSIVAMENTE un objeto JSON con esta forma:\n' +
+            '{"headlines": ["titular 1", "titular 2", "titular 3", "titular 4"], "pressRelease": "texto"}\n\n' +
+            'headlines: 4 titulares alternativos, de 8 a 14 palabras, en español, sin comillas ni punto final.\n' +
+            'pressRelease: una nota de prensa institucional completa que incluya, en este orden y ' +
+            'separados por líneas en blanco: el titular elegido; una entradilla que responda qué, quién, ' +
+            'cuándo y dónde en 2 o 3 frases; tres o cuatro párrafos de cuerpo con las cifras y ' +
+            'compromisos mencionados; una cita textual atribuida al Ministro entrecomillada; y un ' +
+            'párrafo de cierre institucional.\n\n' +
+            'No inventes datos que no aparezcan en la transcripción. No uses Markdown ni los símbolos ' +
+            '** o ##. Texto plano en español, tono formal institucional.',
+        },
+        { role: 'user', content: record.transcription.substring(0, 8000) },
+      ],
+      max_tokens: 1600,
+    });
+
+    const raw = response.choices[0]?.message?.content || '{}';
+    let headlines: string[] = [];
+    let pressRelease = '';
+    try {
+      const parsed = JSON.parse(raw);
+      headlines = Array.isArray(parsed.headlines)
+        ? parsed.headlines.filter((h: unknown) => typeof h === 'string').slice(0, 6)
+        : [];
+      pressRelease = typeof parsed.pressRelease === 'string' ? parsed.pressRelease : '';
+    } catch {
+      // json_object should make this unreachable, but never lose the generation
+      // to a parse error — keep the text so the press office still has something.
+      this.logger.warn(`Press release JSON parse failed for ${id}; storing raw text`);
+      pressRelease = raw;
+    }
+
+    return this.prisma.mediaTranscription.update({
+      where: { id },
+      data: { pressRelease, headlines },
+      include: { createdBy: { select: { id: true, firstName: true, lastName: true, email: true } } },
+    });
+  }
+
+  /**
+   * Rank a batch of uploaded photographs and keep the best for publication.
+   *
+   * The vision selection already existed for video frames; this gives it an
+   * entry point that takes photographs directly, which is what the Minister's
+   * office asked for. Files are moved under the frames directory so the
+   * existing GET /multimedia/frames/:recordId/:filename route serves them.
+   */
+  async selectBestPhotos(files: Express.Multer.File[], userId: string, count = 5) {
+    if (!files || files.length === 0) {
+      throw new BadRequestException('No se recibió ninguna fotografía');
+    }
+
+    const record = await this.prisma.mediaTranscription.create({
+      data: {
+        fileName: `Selección de ${files.length} fotografías`,
+        fileType: 'photos',
+        mimeType: files[0].mimetype,
+        fileSize: files.reduce((n, f) => n + f.size, 0),
+        status: 'COMPLETED',
+        framesStatus: 'PROCESSING',
+        createdById: userId,
+      },
+      include: { createdBy: { select: { id: true, firstName: true, lastName: true, email: true } } },
+    });
+
+    const dir = path.join(process.cwd(), 'uploads', 'multimedia', 'frames', record.id);
+    fs.mkdirSync(dir, { recursive: true });
+    const paths: string[] = [];
+    for (const f of files) {
+      const dest = path.join(dir, path.basename(f.path));
+      fs.renameSync(f.path, dest);
+      paths.push(dest);
+    }
+
+    this.processPhotoSelection(record.id, paths, count).catch((err) => {
+      this.logger.error(`Photo selection failed for ${record.id}: ${err.message}`);
+    });
+
+    return record;
+  }
+
+  private async processPhotoSelection(recordId: string, paths: string[], count: number) {
+    try {
+      const best = await this.selectBestFramesWithVision(paths, count, 'photos');
+      // Unlike video frames, the originals are the user's own uploads — keep them.
+      await this.prisma.mediaTranscription.update({
+        where: { id: recordId },
+        data: {
+          bestFrames: best.map((fp) => ({ filename: path.basename(fp) })) as any,
+          framesStatus: 'COMPLETED',
+        },
+      });
+      this.logger.log(`Photo selection completed for ${recordId}: ${best.length} of ${paths.length} chosen`);
+    } catch (error) {
+      this.logger.error(`Photo selection failed for ${recordId}: ${error.message}`);
+      await this.prisma.mediaTranscription.update({
+        where: { id: recordId },
+        data: { framesStatus: 'FAILED', errorMessage: error.message },
+      });
+    }
+  }
+
   async translate(id: string, targetLang: string) {
     const record = await this.findOne(id);
     if (!record.transcription) throw new NotFoundException('No hay transcripción disponible para traducir');
@@ -312,7 +435,11 @@ export class MultimediaService {
     });
   }
 
-  private async selectBestFramesWithVision(framePaths: string[], count: number): Promise<string[]> {
+  private async selectBestFramesWithVision(
+    framePaths: string[],
+    count: number,
+    source: 'video' | 'photos' = 'video',
+  ): Promise<string[]> {
     if (framePaths.length === 0) return [];
     if (framePaths.length <= count) return framePaths;
 
@@ -332,9 +459,15 @@ export class MultimediaService {
           {
             type: 'text',
             text:
-              `These are ${framePaths.length} frames (numbered 1 to ${framePaths.length}) from a ministerial interview video. ` +
-              `Select the best ${count} frames for social media. Choose frames where: ` +
-              `the person is clearly visible, facing the camera, eyes open, not blurry, good lighting, dignified expression. ` +
+              (source === 'photos'
+                ? `These are ${framePaths.length} photographs (numbered 1 to ${framePaths.length}) taken at an official ` +
+                  `ministerial event. Select the best ${count} for a press release and social media. Prefer photographs ` +
+                  `that are sharp and well exposed, well composed, where the subjects are clearly visible with dignified ` +
+                  `expressions, and that best convey the significance of the occasion. Reject blurry, dark, badly framed ` +
+                  `or near-duplicate shots. Prefer variety over near-identical images. `
+                : `These are ${framePaths.length} frames (numbered 1 to ${framePaths.length}) from a ministerial interview video. ` +
+                  `Select the best ${count} frames for social media. Choose frames where: ` +
+                  `the person is clearly visible, facing the camera, eyes open, not blurry, good lighting, dignified expression. `) +
               `Respond ONLY with a JSON array of the selected frame numbers (1-based), e.g. [1, 4, 8]`,
           },
           ...imageContent,

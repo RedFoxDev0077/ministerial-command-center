@@ -1,8 +1,8 @@
 import {
   Controller, Get, Post, Delete, Body, Param, Request,
-  UseGuards, UseInterceptors, UploadedFile, NotFoundException, StreamableFile,
+  UseGuards, UseInterceptors, UploadedFile, UploadedFiles, NotFoundException, StreamableFile,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { MultimediaService } from './multimedia.service';
@@ -59,6 +59,32 @@ export class MultimediaController {
   }))
   transcribe(@UploadedFile() file: Express.Multer.File, @Request() req) {
     return this.multimediaService.transcribe(file, req.user.id);
+  }
+
+  // Photo batch -> AI picks the best for publication.
+  // Declared before ':id' routes so "photos" is not captured as a record id.
+  @Post('photos/select-best')
+  @UseInterceptors(FilesInterceptor('files', 30, {
+    storage: diskStorage({
+      destination: './uploads/multimedia',
+      filename: (req, file, cb) => {
+        const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        cb(null, unique + path.extname(file.originalname));
+      },
+    }),
+    limits: { fileSize: 15 * 1024 * 1024 }, // 15MB per photograph
+    fileFilter: (req, file, cb) => {
+      if (/^image\//.test(file.mimetype)) cb(null, true);
+      else cb(new Error('Solo se permiten archivos de imagen'), false);
+    },
+  }))
+  selectBestPhotos(@UploadedFiles() files: Express.Multer.File[], @Request() req) {
+    return this.multimediaService.selectBestPhotos(files, req.user.id);
+  }
+
+  @Post(':id/press-release')
+  generatePressRelease(@Param('id') id: string) {
+    return this.multimediaService.generatePressRelease(id);
   }
 
   @Post(':id/summary')
