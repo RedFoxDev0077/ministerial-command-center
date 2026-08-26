@@ -141,11 +141,27 @@ To apply them, use **Actions → CI/CD — Build & Deploy → Run workflow**:
 | Input | When to use |
 |---|---|
 | `apply_search_migration` | Applies `prisma/sql/001_document_search_vector.sql`. Idempotent and safe — run this once. Until you do, document search silently falls back to a slower substring match. |
-| `apply_schema_push` | Runs `prisma db push`. **Can drop columns and data.** Take a database backup first. |
+| `apply_schema_push` | Runs `prisma db push`. **Can drop columns and data.** See the warning below before using it. |
+
+### ⚠ `db push` will offer to drop `documents.search_vector`
+
+`search_vector` is a PostgreSQL **GENERATED** column created by
+`prisma/sql/001_document_search_vector.sql`. Prisma cannot represent a generated
+column, so `db push` reports it as unknown and offers to **DROP** it. Running
+with `--accept-data-loss` destroys full-text search silently — the API keeps
+working and quietly falls back to the slower substring search.
+
+Declaring it as `Unsupported("tsvector")?` does **not** help: Prisma then tries
+to *alter* it and PostgreSQL refuses with
+`column "search_vector" ... is a generated column`.
+
+So apply schema changes with a SQL file under `prisma/sql/` instead, as
+`002_media_press_fields.sql` does. `apply_schema_push` is kept for the rare case
+where a full sync is genuinely wanted, and it is off by default.
 
 There is no `prisma/migrations/` directory, so schema state is managed by
-`db push` rather than a migration history. Generating a proper baseline
-migration is worth doing before this system holds real records.
+`db push` plus those SQL files rather than a migration history. Generating a
+proper baseline migration is worth doing before this system holds real records.
 
 ---
 

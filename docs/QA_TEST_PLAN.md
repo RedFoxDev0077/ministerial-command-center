@@ -58,7 +58,7 @@ These are configuration decisions, not defects.
 
 | Area | Status | Effect |
 |---|---|---|
-| **AI features** | Disabled (no OpenAI key) | AI summaries, AI document generation, the virtual assistant, article generation, translation and multimedia transcription will fail or return nothing. **Out of scope.** |
+| **AI features** | **Enabled** — OpenAI key configured | OCR, AI summaries, AI document generation, the assistant, article generation, translation, multimedia transcription and the press module are all **in scope**. See TS-16 and TS-17. |
 | **Email notifications** | No SMTP configured | No email for assignments, deadlines or signature requests. In-app notifications still work. **Out of scope.** |
 | **WhatsApp bot** | Not connected | The WhatsApp page shows a disconnected state / QR prompt. **Out of scope.** |
 | **File storage** | Local disk on the server | Files upload and download normally; cloud storage is not in use. |
@@ -311,6 +311,52 @@ Fixed during the final week. Please confirm each is genuinely gone.
 | 15-06 | Document search errored on punctuation | See 09-04 | P1 |
 | 15-07 | The public QR page exposed internal notes | See 05-10 | P1 |
 | 15-08 | File sizes displayed as `NaN` or `undefined` | Correct sizes in KB/MB | P2 |
+| 15-09 | "Sello de entrada" failed with `Unexpected field` whenever a stamp image was attached; it worked without one | Applying a stamp succeeds **with** and **without** an image | P1 |
+| 15-10 | Archiving left the document in Bandeja de Entrada as well as Archivo Institucional | Archiving removes it from the tray; it appears only in the archive. Filtering a tray explicitly by "Archivado" still lists it | P1 |
+
+### TS-16 · Press module — nota de prensa, titulares and best photographs
+
+New. This is the part the Minister asked about specifically, so treat the whole
+suite as high priority. Use **real** recordings and event photographs —
+synthetic files prove the mechanism but not the quality.
+
+| ID | Steps | Expected | P |
+|---|---|---|---|
+| 16-01 | Multimedia → upload a recording of an official event (audio or video) | Uploads; transcription starts and reaches COMPLETED | P1 |
+| 16-02 | Check the transcription against what was actually said | Text matches the recording; Spanish detected | P1 |
+| 16-03 | Click "Generar Nota de Prensa y Titulares" | 4 headline options appear, plus a full press release | P1 |
+| 16-04 | Read the press release structure | Contains: headline, entradilla answering qué/quién/cuándo/dónde, body paragraphs with the figures, a quoted line attributed to the Minister, institutional closing paragraph | P1 |
+| 16-05 | Check every figure, date, name and place against the recording | **Nothing invented.** Any fabricated fact is **Critical** — report immediately | P1 |
+| 16-06 | Copy the release and a headline, paste into a plain text editor | Clean text, no `**` or `##`, ready to publish | P1 |
+| 16-07 | Click "Regenerar Nota de Prensa" | Produces a fresh version; the previous one is replaced | P2 |
+| 16-08 | Generate a press release on a recording whose transcription failed or is empty | Clear error message, no crash, no blank page | P2 |
+| 16-09 | Multimedia → upload a batch of event photographs | Accepted; the AI selects the best for publication | P1 |
+| 16-10 | Look at the selected photographs on screen | They display as actual images, not broken icons. This path was previously broken — check carefully | P1 |
+| 16-11 | Check your uploaded originals after selection | All originals still present; only the best are highlighted. Nothing deleted | P1 |
+| 16-12 | Download a selected photograph | Downloads intact and opens | P2 |
+| 16-13 | Judge the selection quality on real photographs | Prefers sharp, well-exposed, well-composed shots; avoids blurry, dark and near-duplicate images. Report if the choices look wrong — the criteria can be tuned | P2 |
+| 16-14 | Upload more than 30 photographs | Rejected with a clear message | P2 |
+| 16-15 | Upload a photograph larger than 15MB | Rejected with a clear message | P2 |
+| 16-16 | Upload a non-image file (e.g. a PDF) to the photo selector | Rejected with a clear message | P2 |
+
+### TS-17 · AI features (previously out of scope)
+
+The OpenAI key is now configured, so everything here is testable for the first
+time. Costs are billed per use — avoid running the same generation dozens of
+times.
+
+| ID | Steps | Expected | P |
+|---|---|---|---|
+| 17-01 | Upload a scanned PDF or photo of a document and run OCR | Text is extracted and matches the scan | P1 |
+| 17-02 | Generate an AI summary of a document | Summary reflects the actual content; no invented facts | P1 |
+| 17-03 | Generate a document from a prompt or template with AI | Produces usable institutional Spanish | P2 |
+| 17-04 | Ask the Asistente IA a question about the system | Answers in Spanish, relevant, no crash | P2 |
+| 17-05 | Translate a document to another language | Translation is accurate and complete | P2 |
+| 17-06 | Generate the executive summary of a multimedia recording | Includes key points, decisions and pending actions | P2 |
+| 17-07 | Generate a social media post from a recording | Institutional tone, 2–3 short paragraphs, ends with hashtags | P2 |
+| 17-08 | Generate a technical opinion on a recording | Produced without error | P3 |
+| 17-09 | Generate content in the Contenidos module | Produces article proposals and drafts | P2 |
+| 17-10 | Trigger any AI action twice in quick succession | No duplicate records, no crash | P3 |
 
 ---
 
@@ -369,6 +415,7 @@ full, including file names and line numbers.
 | 4 | TS-06, TS-07, TS-09 — cases, deadlines, search |
 | 5 | TS-10, TS-11, TS-12 |
 | 6 | TS-13, TS-15 — interface sweep and regressions |
+| 6–7 | **TS-16, TS-17** — press module and AI features (new, high priority) |
 | 7 | Re-test fixed bugs; write the summary |
 
 ---
@@ -381,6 +428,7 @@ Handover is recommended when:
 - [ ] No open **Critical** or **High** defects
 - [ ] TS-14 fully passed
 - [ ] TS-15 fully passed
+- [ ] TS-16 fully passed (the press module the Minister asked for)
 - [ ] TS-03 completed end to end at least once
 - [ ] All Medium and Low defects logged, with severity agreed
 - [ ] The final report states what was tested, what passed, what failed, and what was out of scope
